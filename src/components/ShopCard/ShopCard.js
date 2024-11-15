@@ -92,7 +92,7 @@ const ShopCard = ({ company }) => {
             >
                 <Box sx={{ boxSizing: 'border-box' }}>
                     {/* Logo */}
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <img
                             src={company.image || 'https://via.placeholder.com/80'}
                             alt={company.title}

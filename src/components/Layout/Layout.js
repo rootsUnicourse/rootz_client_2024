@@ -1,14 +1,13 @@
-// src/components/Layout.js
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
-import { Container } from '@mui/material';
+import { Box } from '@mui/material';
 
 const Layout = ({ children }) => {
     return (
-        <Container
-            maxWidth="lg" // Sets the max width for the entire page, including Navbar
+        <Box
             sx={{
-                padding: "0", // Ensures no extra padding around the container
+                padding: "0", // Ensures no extra padding
+                backgroundColor: '#f1f1f1',
             }}
         >
             {/* Navbar */}
@@ -22,7 +21,7 @@ const Layout = ({ children }) => {
             >
                 {children}
             </main>
-        </Container>
+        </Box>
     );
 };
 

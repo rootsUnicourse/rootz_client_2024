@@ -22,7 +22,7 @@ const ShopCard = ({ company }) => {
     }, [company.description]);
 
     const cardHeight = 300; // Total card height
-    const bottomSectionBaseHeight = cardHeight * 0.65; // Base bottom section height
+    const bottomSectionBaseHeight = cardHeight * 0.55; // Base bottom section height
 
     const additionalSpaceForDescription =
         company.description && isHovered ? descriptionHeight : 0;
@@ -32,9 +32,8 @@ const ShopCard = ({ company }) => {
     return (
         <Card
             sx={{
-                width: 250, // Card width
+                width: 264, // Card width
                 height: cardHeight, // Fixed card height
-                borderRadius: '10px',
                 position: 'relative',
                 overflow: 'hidden',
                 boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
@@ -68,7 +67,7 @@ const ShopCard = ({ company }) => {
                 alt={company.title}
                 sx={{
                     width: '100%',
-                    height: '35%',
+                    height: '45%',
                     objectFit: 'contain',
                     backgroundColor: '#f0f0f0',
                     transition: 'opacity 0.3s',
@@ -83,12 +82,10 @@ const ShopCard = ({ company }) => {
             <Box
                 sx={{
                     position: 'absolute',
-                    bottom: 10, // Ensures expanding content stays above the button
+                    bottom: 0, // Ensures expanding content stays above the button
                     width: '100%',
                     height: `${bottomSectionHeight}px`,
                     backgroundColor: '#fff',
-                    borderTopLeftRadius: '10px',
-                    borderTopRightRadius: '10px',
                     zIndex: 3,
                     transition: 'height 0.3s ease-in-out',
                     paddingBottom: 0, // Removed extra padding at the bottom
@@ -105,7 +102,6 @@ const ShopCard = ({ company }) => {
                                 width: '120px',
                                 height: '40px',
                                 objectFit: 'cover',
-                                borderRadius: '5px',
                             }}
                         />
                     </Box>

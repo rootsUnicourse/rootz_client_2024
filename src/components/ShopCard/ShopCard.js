@@ -67,7 +67,7 @@ const ShopCard = ({ company }) => {
                 alt={company.title}
                 sx={{
                     width: '100%',
-                    height: '45%',
+                    height: '40%',
                     objectFit: 'contain',
                     backgroundColor: '#f0f0f0',
                     transition: 'opacity 0.3s',
@@ -88,10 +88,9 @@ const ShopCard = ({ company }) => {
                     backgroundColor: '#fff',
                     zIndex: 3,
                     transition: 'height 0.3s ease-in-out',
-                    paddingBottom: 0, // Removed extra padding at the bottom
                 }}
             >
-                <Box sx={{ padding: '10px', boxSizing: 'border-box' }}>
+                <Box sx={{ boxSizing: 'border-box' }}>
                     {/* Logo */}
                     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
                         <img
@@ -108,8 +107,8 @@ const ShopCard = ({ company }) => {
 
                     {/* Shop Name */}
                     <Typography
-                        variant="h6"
-                        sx={{ fontWeight: 'bold', textAlign: 'center', mt: 1 }}
+                        
+                        sx={{ textAlign: 'center', fontSize: '15px', color: '#4f4f4f'}}
                     >
                         {company.title}
                     </Typography>
@@ -118,9 +117,8 @@ const ShopCard = ({ company }) => {
                     <Typography
                         variant="body1"
                         sx={{
-                            mt: 1,
                             color: '#388e3c',
-                            fontWeight: 'bold',
+                            fontWeight: 700,
                             textAlign: 'center',
                             marginBottom: '8px', // Reduced spacing between cashback and button
                         }}

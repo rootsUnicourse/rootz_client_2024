@@ -24,9 +24,14 @@ function Home() {
   return (
     <Container maxWidth="lg" sx={{ mt: 2 }}>
       {/* Grid of ShopCards */}
-      <Grid2 container spacing={2}>
+      <Grid2
+        container
+        spacing={2}
+        justifyContent="center" // Centers items horizontally
+        alignItems="center" // Centers items vertically (if needed)
+      >
         {companies.map((company) => (
-          <Grid2 item key={company._id} xs={12} sm={6} md={3} lg={3}>
+          <Grid2 item key={company._id} xs={6} sm={6} md={3} lg={3}>
             <ShopCard company={company} />
           </Grid2>
         ))}

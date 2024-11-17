@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
+import logo from "../../Assets/Images/Rootz_logo.png";
 
 const Navbar = () => {
   return (
@@ -18,15 +19,15 @@ const Navbar = () => {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton edge="start" color="inherit" sx={{ padding: 0 }}>
               <img
-                src="https://via.placeholder.com/310x55" // Replace with your logo URL
+                src={logo} // Replace with your logo URL
                 alt="Logo"
-                style={{ width: "310px", height: "55px" }}
+                style={{ width: "310px", height: "100px" }}
               />
             </IconButton>
           </Box>
 
           {/* Center: Search Bar */}
-          <Box sx={{ flexGrow: 0, mx: 3, width: "400px" }}>
+          <Box sx={{ flexGrow: 0, marginRight: "100px", width: "400px" }}>
             <TextField
               variant="outlined"
               placeholder="Search shops"
@@ -72,7 +73,19 @@ const Navbar = () => {
 
           {/* Right: Buttons */}
           <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="outlined" sx={{ color: "white", backgroundColor: "#39B75D", opacity: 0.8, border: "none", borderRadius: "50px" }}>
+            <Button
+              variant="outlined"
+              sx={{
+                color: "white",
+                backgroundColor: "#39B75D",
+                opacity: 0.8,
+                border: "none",
+                borderRadius: "50px",
+                "&:hover": {
+                  backgroundColor: "#39B75D", // Hover background color
+                  opacity: 1,
+                },
+              }}>
               Log In
             </Button>
           </Box>

@@ -26,7 +26,7 @@ const Navbar = () => {
           </Box>
 
           {/* Center: Search Bar */}
-          <Box sx={{ flexGrow: 1, mx: 2 }}>
+          <Box sx={{ flexGrow: 0, mx: 3, width: "400px" }}>
             <TextField
               variant="outlined"
               placeholder="Search shops"
@@ -35,26 +35,35 @@ const Navbar = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton>
-                      <SearchIcon />
+                    <IconButton
+                      sx={{
+                        backgroundColor: "#39B75D",
+                        opacity: 0.8,
+                        marginRight: -1.7,
+                        "&:hover": {
+                          backgroundColor: "#39B75D", // Hover background color
+                          opacity: 1,
+                        },
+                      }}
+                    >
+                      <SearchIcon sx={{ color: "white", fontSize: "21.5px" }} />
                     </IconButton>
                   </InputAdornment>
                 ),
               }}
               sx={{
                 backgroundColor: "#f5f5f5", // Light gray background
-                borderRadius: "50px", // Ensures the input is round
+                borderRadius: "30px", // Rounded style
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "50px", // Matches the round style
+                  borderRadius: "30px",
                   "& fieldset": {
                     borderColor: "#DDE2E7", // Sets the border color to your specified color
                   },
                   "&:hover fieldset": {
-                    borderColor: "#B0B8C1", // Optional: Darker border on hover
+                    borderColor: "#DDE2E7", // Optional: Darker border on hover
                   },
                   "&.Mui-focused fieldset": {
                     borderColor: "#DDE2E7", // Keeps the same border color on focus
-                    borderWidth: "2px", // Makes the border slightly thicker on focus
                   },
                 },
               }}
@@ -63,11 +72,8 @@ const Navbar = () => {
 
           {/* Right: Buttons */}
           <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="outlined" sx={{ borderColor: "#000", color: "#000" }}>
-              Sign In
-            </Button>
-            <Button variant="contained" sx={{ backgroundColor: "#000", color: "#fff" }}>
-              Sign Up
+            <Button variant="outlined" sx={{ color: "white", backgroundColor: "#39B75D", opacity: 0.8, border: "none", borderRadius: "50px" }}>
+              Log In
             </Button>
           </Box>
         </Toolbar>

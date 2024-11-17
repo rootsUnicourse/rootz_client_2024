@@ -8,10 +8,11 @@ import {
     Button,
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const ShopCard = ({ company }) => {
     const [isHovered, setIsHovered] = useState(false);
-
+    const [hover, setHover] = useState(false);
     const descriptionRef = useRef(null);
     const [descriptionHeight, setDescriptionHeight] = useState(0);
 
@@ -52,13 +53,35 @@ const ShopCard = ({ company }) => {
                     position: 'absolute',
                     top: 8,
                     right: 8,
-                    backgroundColor: '#fff',
-                    '&:hover': { backgroundColor: '#f5f5f5' },
+                    backgroundColor: '#f5f5f5',
+                    opacity: 0.9,
                     zIndex: 4,
+                    '&:hover': {
+                        backgroundColor: '#f5f5f5', // Keeps the background consistent
+                    },
                 }}
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
             >
-                <FavoriteBorderIcon sx={{ color: '#ff4081' }} />
+                {hover ? (
+                    <FavoriteIcon
+                        sx={{
+                            color: '#ff4081',
+                            transform: 'scale(0.9)', // Shrinks the icon
+                            transition: 'transform 0.2s ease-in-out', // Smooth animation
+                        }}
+                    />
+                ) : (
+                    <FavoriteBorderIcon
+                        sx={{
+                            color: '#ff4081',
+                            transform: hover ? 'scale(0.9)' : 'scale(1)', // Shrinking effect
+                            transition: 'transform 0.2s ease-in-out', // Smooth animation
+                        }}
+                    />
+                )}
             </IconButton>
+
 
             {/* Background Image */}
             <CardMedia
@@ -69,7 +92,7 @@ const ShopCard = ({ company }) => {
                     width: '100%',
                     height: '40%',
                     objectFit: 'contain',
-                    backgroundColor: '#f0f0f0',
+                    backgroundColor: '#CCCCCC',
                     transition: 'opacity 0.3s',
                     opacity: isHovered ? 0.7 : 1,
                     position: 'absolute',
@@ -107,8 +130,8 @@ const ShopCard = ({ company }) => {
 
                     {/* Shop Name */}
                     <Typography
-                        
-                        sx={{ textAlign: 'center', fontSize: '15px', color: '#4f4f4f'}}
+
+                        sx={{ textAlign: 'center', fontSize: '15px', color: '#4f4f4f' }}
                     >
                         {company.title}
                     </Typography>
@@ -117,7 +140,7 @@ const ShopCard = ({ company }) => {
                     <Typography
                         variant="body1"
                         sx={{
-                            color: '#388e3c',
+                            color: '#46C76B',
                             fontWeight: 700,
                             textAlign: 'center',
                             marginBottom: '8px', // Reduced spacing between cashback and button
@@ -163,16 +186,17 @@ const ShopCard = ({ company }) => {
             >
                 <Button
                     variant="contained"
-                    color="primary"
                     sx={{
                         padding: '10px 20px', // Consistent padding for roundness
                         borderRadius: '50px', // Fully rounded button
-                        backgroundColor: '#000',
-                        color: '#fff',
-                        fontWeight: 'bold',
+                        backgroundColor: 'white',
+                        color: "#46c76b",
                         textTransform: 'none', // Prevent uppercase text
+                        border: '1px solid #46C76B',
+                        boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)', // Subtle shadow
                         '&:hover': {
-                            backgroundColor: '#333',
+                            backgroundColor: '#46C76B',
+                            color: "white",
                         },
                     }}
                     onClick={() => window.open(company.siteUrl, '_blank')}

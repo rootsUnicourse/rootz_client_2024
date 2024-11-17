@@ -23,11 +23,6 @@ function Home() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 2 }}>
-      {/* Title */}
-      <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
-        All Shops
-      </Typography>
-
       {/* Grid of ShopCards */}
       <Grid2 container spacing={2}>
         {companies.map((company) => (

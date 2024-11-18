@@ -3,7 +3,7 @@ import { Container } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 
 import ShopCard from "../ShopCard/ShopCard";
-import { fetchCompanys } from "../../API/index"; // Make sure this is the correct import path
+import { fetchCompanies } from "../../API/index"; // Make sure this is the correct import path
 
 function Home() {
   const [companies, setCompanies] = useState([]);
@@ -11,7 +11,7 @@ function Home() {
   useEffect(() => {
     const fetchCompaniesData = async () => {
       try {
-        const { data } = await fetchCompanys();
+        const { data } = await fetchCompanies();
         setCompanies(data);
       } catch (error) {
         console.error("Error fetching companies:", error);

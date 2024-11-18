@@ -55,7 +55,7 @@ const LoginModal = ({ open, handleClose }) => {
       try {
         // Use the register function from the API file
         const response = await register({
-          Name: formData.name,
+          name: formData.name,
           email: formData.email,
           password: formData.password,
         });
@@ -94,6 +94,9 @@ const LoginModal = ({ open, handleClose }) => {
       });
       alert("Email verified successfully!");
       const { token, user } = response.data;
+      // Save to local storage
+      localStorage.setItem("userToken", token);
+      localStorage.setItem("userInfo", JSON.stringify(user));
       // Store token and user information as needed
       handleClose();
     } catch (error) {

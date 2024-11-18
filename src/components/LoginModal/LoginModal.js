@@ -14,7 +14,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useGoogleLogin } from "@react-oauth/google";
-import { register, login, verifyEmail } from "../../API/index"; // Adjust the import path if necessary
+import { register, login, verifyEmail, googleLogin } from "../../API/index"; // Import googleLogin
 
 const LoginModal = ({ open, handleClose }) => {
   const [isSignUp, setIsSignUp] = useState(false); // Toggle between login and sign-up
@@ -31,7 +31,7 @@ const LoginModal = ({ open, handleClose }) => {
     onSuccess: (tokenResponse) => {
       // Handle successful Google login here
       console.log(tokenResponse);
-      handleClose();
+        handleClose();
     },
     onError: (error) => {
       console.error("Google Login Failed:", error);
@@ -73,8 +73,11 @@ const LoginModal = ({ open, handleClose }) => {
           email: formData.email,
           password: formData.password,
         });
-        // Handle successful login (e.g., store token, redirect)
-        console.log("Login successful:", response.data);
+        // Handle successful login
+        const { token, user } = response.data;
+        // Save to local storage
+        localStorage.setItem("userToken", token);
+        localStorage.setItem("userInfo", JSON.stringify(user));
         handleClose();
       } catch (error) {
         console.error("Login Error:", error.response?.data?.message || error.message);
@@ -97,7 +100,6 @@ const LoginModal = ({ open, handleClose }) => {
       // Save to local storage
       localStorage.setItem("userToken", token);
       localStorage.setItem("userInfo", JSON.stringify(user));
-      // Store token and user information as needed
       handleClose();
     } catch (error) {
       console.error("Verification Error:", error.response?.data?.message || error.message);

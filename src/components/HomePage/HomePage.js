@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 
 import ShopCard from "../ShopCard/ShopCard";

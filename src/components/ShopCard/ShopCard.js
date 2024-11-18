@@ -201,7 +201,7 @@ const ShopCard = ({ company }) => {
                     }}
                     onClick={() => window.open(company.siteUrl, '_blank')}
                 >
-                    Go to Site
+                    Shop on Site
                 </Button>
             </Box>
         </Card>

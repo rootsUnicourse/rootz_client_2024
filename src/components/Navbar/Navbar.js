@@ -1,22 +1,35 @@
 // Navbar.jsx
 
 import React, { useState, useEffect } from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
+import {
+  AppBar,
+  Toolbar,
+  Container,
+  Box,
+  Button,
+  TextField,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { Link } from "react-router-dom";
 import logo from "../../Assets/Images/Rootz_logo.png";
-import { fetchCompanysBySearch } from "../../API/index"; // Adjust the import path if necessary
-import SearchResultItem from "../SearchResultItem/SearchResultItem"; // Import the new component
+import { fetchCompanysBySearch } from "../../API/index";
+import SearchResultItem from "../SearchResultItem/SearchResultItem";
+import LoginModal from "../LoginModal/LoginModal"; // Import the LoginModal component
 
 const Navbar = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [openLoginModal, setOpenLoginModal] = useState(false);
+
+  const handleOpenLoginModal = () => {
+    setOpenLoginModal(true);
+  };
+
+  const handleCloseLoginModal = () => {
+    setOpenLoginModal(false);
+  };
 
   // Debounce API calls to prevent excessive requests
   useEffect(() => {
@@ -49,13 +62,15 @@ const Navbar = () => {
         >
           {/* Left: Logo */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton edge="start" color="inherit" sx={{ padding: 0 }}>
-              <img
-                src={logo}
-                alt="Logo"
-                style={{ width: "310px", height: "100px" }}
-              />
-            </IconButton>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <IconButton edge="start" color="inherit" sx={{ padding: 0 }}>
+                <img
+                  src={logo}
+                  alt="Logo"
+                  style={{ width: "310px", height: "100px" }}
+                />
+              </IconButton>
+            </Link>
           </Box>
 
           {/* Center: Search Bar */}
@@ -121,11 +136,11 @@ const Navbar = () => {
                   border: "1px solid #ccc",
                   marginTop: "5px",
                   // Hide scrollbar
-                  '&::-webkit-scrollbar': {
-                    display: 'none',
+                  "&::-webkit-scrollbar": {
+                    display: "none",
                   },
-                  '-ms-overflow-style': 'none',  // IE and Edge
-                  'scrollbar-width': 'none',     // Firefox
+                  "-ms-overflow-style": "none", // IE and Edge
+                  "scrollbar-width": "none", // Firefox
                 }}
               >
                 {searchResults.map((company, index) => (
@@ -161,12 +176,16 @@ const Navbar = () => {
                   opacity: 1,
                 },
               }}
+              onClick={handleOpenLoginModal} // Open the modal
             >
               Log In
             </Button>
           </Box>
         </Toolbar>
       </Container>
+
+      {/* Login Modal */}
+      <LoginModal open={openLoginModal} handleClose={handleCloseLoginModal} />
     </AppBar>
   );
 };

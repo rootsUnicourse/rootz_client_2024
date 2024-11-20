@@ -9,3 +9,5 @@ export const fetchCompanysBySearch = (searchQuery) => API.get('/companies/search
 export const register = (formData) => API.post('/auth/register', formData);
 export const verifyEmail = (formData) => API.post('/auth/verify-email', formData);
 export const login = (formData) => API.post('/auth/login', formData);
+export const googleLogin = (tokenId) =>API.post('/auth/google-login', { tokenId });
+  

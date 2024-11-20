@@ -1,5 +1,3 @@
-// Navbar.jsx
-
 import React, { useState, useEffect } from "react";
 import {
   AppBar,
@@ -10,18 +8,20 @@ import {
   TextField,
   IconButton,
   InputAdornment,
+  Avatar, // Import Avatar
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import logo from "../../Assets/Images/Rootz_logo.png";
 import { fetchCompanysBySearch } from "../../API/index";
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
-import LoginModal from "../LoginModal/LoginModal"; // Import the LoginModal component
+import LoginModal from "../LoginModal/LoginModal";
 
 const Navbar = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [openLoginModal, setOpenLoginModal] = useState(false);
+  const [user, setUser] = useState(null); // Add user state
 
   const handleOpenLoginModal = () => {
     setOpenLoginModal(true);
@@ -30,6 +30,20 @@ const Navbar = () => {
   const handleCloseLoginModal = () => {
     setOpenLoginModal(false);
   };
+
+  // Function to update user state after login
+  const handleUserLogin = (userInfo) => {
+    setUser(userInfo);
+    handleCloseLoginModal();
+  };
+
+  // Retrieve user info from localStorage on component mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userInfo");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   // Debounce API calls to prevent excessive requests
   useEffect(() => {
@@ -161,31 +175,42 @@ const Navbar = () => {
             )}
           </Box>
 
-          {/* Right: Buttons */}
+          {/* Right: Login Button or User Avatar */}
           <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              variant="outlined"
-              sx={{
-                color: "white",
-                backgroundColor: "#39B75D",
-                opacity: 0.8,
-                border: "none",
-                borderRadius: "50px",
-                "&:hover": {
+            {user ? (
+              <Avatar
+                alt={user.name}
+                src={user.profileImage || "/default-avatar.png"} // Provide a default image if profileImage is not available
+              />
+            ) : (
+              <Button
+                variant="outlined"
+                sx={{
+                  color: "white",
                   backgroundColor: "#39B75D",
-                  opacity: 1,
-                },
-              }}
-              onClick={handleOpenLoginModal} // Open the modal
-            >
-              Log In
-            </Button>
+                  opacity: 0.8,
+                  border: "none",
+                  borderRadius: "50px",
+                  "&:hover": {
+                    backgroundColor: "#39B75D",
+                    opacity: 1,
+                  },
+                }}
+                onClick={handleOpenLoginModal}
+              >
+                Log In
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>
 
       {/* Login Modal */}
-      <LoginModal open={openLoginModal} handleClose={handleCloseLoginModal} />
+      <LoginModal
+        open={openLoginModal}
+        handleClose={handleCloseLoginModal}
+        onLogin={handleUserLogin} // Pass the function to LoginModal
+      />
     </AppBar>
   );
 };

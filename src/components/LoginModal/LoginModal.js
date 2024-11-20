@@ -1,5 +1,3 @@
-// LoginModal.jsx
-
 import React, { useState } from "react";
 import {
   Dialog,
@@ -13,10 +11,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useGoogleLogin } from "@react-oauth/google";
-import { register, login, verifyEmail, googleLogin } from "../../API/index"; // Import googleLogin
+import { GoogleLogin } from '@react-oauth/google';
+import { register, login, verifyEmail, googleLogin } from "../../API/index";
 
-const LoginModal = ({ open, handleClose }) => {
+const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
   const [isSignUp, setIsSignUp] = useState(false); // Toggle between login and sign-up
   const [formData, setFormData] = useState({
     name: "",
@@ -25,18 +23,32 @@ const LoginModal = ({ open, handleClose }) => {
     confirmPassword: "",
     verificationCode: "",
   });
+
   const [showVerification, setShowVerification] = useState(false); // Show verification code input
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      // Handle successful Google login here
-      console.log(tokenResponse);
-        handleClose();
-    },
-    onError: (error) => {
-      console.error("Google Login Failed:", error);
-    },
-  });
+  const responseMessage = async (response) => {
+    try {
+      // Extract the ID token from the Google login response
+      const tokenId = response.credential;
+
+      // Use the googleLogin function to send the token to your backend
+      const result = await googleLogin(tokenId);
+
+      // If the backend response is successful, store the token and user details
+      console.log('Google sign in successful:', result);
+      localStorage.setItem('userToken', result.data.token); // Standardize key
+      localStorage.setItem('userInfo', JSON.stringify(result.data.user)); // Standardize key
+      onLogin(result.data.user); // Update user state in Navbar
+      handleClose(); // Close the modal
+    } catch (error) {
+      // Handle errors, e.g., display a message to the user
+      console.error('Error during Google sign-in:', error);
+    }
+  };
+
+  const errorMessage = (error) => {
+    console.log(error);
+  };
 
   // Handle input changes
   const handleChange = (e) => {
@@ -78,7 +90,8 @@ const LoginModal = ({ open, handleClose }) => {
         // Save to local storage
         localStorage.setItem("userToken", token);
         localStorage.setItem("userInfo", JSON.stringify(user));
-        handleClose();
+        onLogin(user); // Update user state in Navbar
+        handleClose(); // Close the modal
       } catch (error) {
         console.error("Login Error:", error.response?.data?.message || error.message);
         alert(error.response?.data?.message || "Login failed.");
@@ -100,7 +113,8 @@ const LoginModal = ({ open, handleClose }) => {
       // Save to local storage
       localStorage.setItem("userToken", token);
       localStorage.setItem("userInfo", JSON.stringify(user));
-      handleClose();
+      onLogin(user); // Update user state in Navbar
+      handleClose(); // Close the modal
     } catch (error) {
       console.error("Verification Error:", error.response?.data?.message || error.message);
       alert(error.response?.data?.message || "Verification failed.");
@@ -244,15 +258,7 @@ const LoginModal = ({ open, handleClose }) => {
               <span>or</span>
             </Box>
             {/* Google Login Button */}
-            <Button
-              variant="outlined"
-              fullWidth
-              startIcon={<GoogleIcon />}
-              onClick={() => handleGoogleLogin()}
-              sx={{ textTransform: "none" }}
-            >
-              Sign in with Google
-            </Button>
+            <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
           </>
         )}
       </DialogContent>

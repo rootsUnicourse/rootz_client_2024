@@ -191,6 +191,9 @@ const Navbar = () => {
                   opacity: 0.8,
                   border: "none",
                   borderRadius: "50px",
+                  whiteSpace: 'nowrap',     // Prevent text wrapping
+                  minWidth: '100px',        // Set a fixed minimum width
+                  flexShrink: 0,            // Prevent the button from shrinking
                   "&:hover": {
                     backgroundColor: "#39B75D",
                     opacity: 1,
@@ -200,6 +203,7 @@ const Navbar = () => {
               >
                 Log In
               </Button>
+
             )}
           </Box>
         </Toolbar>

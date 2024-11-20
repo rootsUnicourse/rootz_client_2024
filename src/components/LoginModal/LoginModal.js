@@ -8,14 +8,16 @@ import {
   TextField,
   Button,
   Typography,
+  Snackbar,
+  Alert, // Import Alert
+  FormHelperText, // Import FormHelperText
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import GoogleIcon from "@mui/icons-material/Google";
 import { GoogleLogin } from '@react-oauth/google';
 import { register, login, verifyEmail, googleLogin } from "../../API/index";
 
-const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
-  const [isSignUp, setIsSignUp] = useState(false); // Toggle between login and sign-up
+const LoginModal = ({ open, handleClose, onLogin }) => {
+  const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,25 +26,26 @@ const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
     verificationCode: "",
   });
 
-  const [showVerification, setShowVerification] = useState(false); // Show verification code input
+  const [showVerification, setShowVerification] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' }); // Snackbar state
+  const [fieldErrors, setFieldErrors] = useState({}); // Field-specific errors
 
   const responseMessage = async (response) => {
     try {
-      // Extract the ID token from the Google login response
       const tokenId = response.credential;
-
-      // Use the googleLogin function to send the token to your backend
       const result = await googleLogin(tokenId);
-
-      // If the backend response is successful, store the token and user details
       console.log('Google sign in successful:', result);
-      localStorage.setItem('userToken', result.data.token); // Standardize key
-      localStorage.setItem('userInfo', JSON.stringify(result.data.user)); // Standardize key
-      onLogin(result.data.user); // Update user state in Navbar
-      handleClose(); // Close the modal
+      localStorage.setItem('userToken', result.data.token);
+      localStorage.setItem('userInfo', JSON.stringify(result.data.user));
+      onLogin(result.data.user);
+      handleClose();
     } catch (error) {
-      // Handle errors, e.g., display a message to the user
       console.error('Error during Google sign-in:', error);
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || "Google sign-in failed.",
+        severity: 'error',
+      });
     }
   };
 
@@ -50,75 +53,92 @@ const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
     console.log(error);
   };
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFieldErrors({ ...fieldErrors, [e.target.name]: '' }); // Clear field error on change
   };
 
-  // Handle form submission
   const handleEmailLogin = async (event) => {
     event.preventDefault();
+    setFieldErrors({}); // Reset field errors
     if (isSignUp) {
       // Sign-up logic
       if (formData.password !== formData.confirmPassword) {
-        alert("Passwords do not match!");
+        setFieldErrors({ confirmPassword: "Passwords do not match!" });
         return;
       }
       try {
-        // Use the register function from the API file
         const response = await register({
           name: formData.name,
           email: formData.email,
           password: formData.password,
         });
-        alert(response.data.message);
-        setShowVerification(true); // Show verification code input
+        setSnackbar({
+          open: true,
+          message: response.data.message || "Registration successful! Please verify your email.",
+          severity: 'success',
+        });
+        setShowVerification(true);
       } catch (error) {
         console.error("Registration Error:", error.response?.data?.message || error.message);
-        alert(error.response?.data?.message || "Registration failed.");
+        setSnackbar({
+          open: true,
+          message: error.response?.data?.message || "Registration failed.",
+          severity: 'error',
+        });
       }
     } else {
       // Login logic
       try {
-        // Use the login function from the API file
         const response = await login({
           email: formData.email,
           password: formData.password,
         });
-        // Handle successful login
         const { token, user } = response.data;
-        // Save to local storage
         localStorage.setItem("userToken", token);
         localStorage.setItem("userInfo", JSON.stringify(user));
-        onLogin(user); // Update user state in Navbar
-        handleClose(); // Close the modal
+        onLogin(user);
+        handleClose();
       } catch (error) {
         console.error("Login Error:", error.response?.data?.message || error.message);
-        alert(error.response?.data?.message || "Login failed.");
+        setSnackbar({
+          open: true,
+          message: error.response?.data?.message || "Login failed.",
+          severity: 'error',
+        });
       }
     }
   };
 
-  // Handle verification code submission
   const handleVerifyCode = async (event) => {
     event.preventDefault();
     try {
-      // Use the verifyEmail function from the API file
       const response = await verifyEmail({
         email: formData.email,
         verificationCode: formData.verificationCode,
       });
-      alert("Email verified successfully!");
+      setSnackbar({
+        open: true,
+        message: "Email verified successfully!",
+        severity: 'success',
+      });
       const { token, user } = response.data;
-      // Save to local storage
       localStorage.setItem("userToken", token);
       localStorage.setItem("userInfo", JSON.stringify(user));
-      onLogin(user); // Update user state in Navbar
-      handleClose(); // Close the modal
+      onLogin(user);
+      handleClose();
     } catch (error) {
       console.error("Verification Error:", error.response?.data?.message || error.message);
-      alert(error.response?.data?.message || "Verification failed.");
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || "Verification failed.",
+        severity: 'error',
+      });
     }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -159,6 +179,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
                 autoFocus
                 value={formData.name}
                 onChange={handleChange}
+                error={Boolean(fieldErrors.name)}
+                helperText={fieldErrors.name}
               />
             )}
             <TextField
@@ -172,6 +194,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
               autoFocus={!isSignUp}
               value={formData.email}
               onChange={handleChange}
+              error={Boolean(fieldErrors.email)}
+              helperText={fieldErrors.email}
             />
             <TextField
               margin="normal"
@@ -184,6 +208,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
               autoComplete={isSignUp ? "new-password" : "current-password"}
               value={formData.password}
               onChange={handleChange}
+              error={Boolean(fieldErrors.password)}
+              helperText={fieldErrors.password}
             />
             {isSignUp && (
               <TextField
@@ -197,6 +223,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
                 autoComplete="new-password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                error={Boolean(fieldErrors.confirmPassword)}
+                helperText={fieldErrors.confirmPassword}
               />
             )}
             <Button
@@ -235,6 +263,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
               autoFocus
               value={formData.verificationCode}
               onChange={handleChange}
+              error={Boolean(fieldErrors.verificationCode)}
+              helperText={fieldErrors.verificationCode}
             />
             <Button
               type="submit"
@@ -262,6 +292,18 @@ const LoginModal = ({ open, handleClose, onLogin }) => { // Destructure onLogin
           </>
         )}
       </DialogContent>
+
+      {/* Snackbar for messages */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 };

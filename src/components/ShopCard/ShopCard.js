@@ -109,7 +109,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
                     width: '100%',
                     height: '40%',
                     objectFit: 'contain',
-                    backgroundColor: '#CCCCCC',
+                    backgroundColor: '#009688',
                     transition: 'opacity 0.3s',
                     opacity: isHovered ? 0.7 : 1,
                     position: 'absolute',
@@ -156,7 +156,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
                     <Typography
                         variant="body1"
                         sx={{
-                            color: '#46C76B',
+                            color: '#4CAF50',
                             fontWeight: 700,
                             textAlign: 'center',
                             marginBottom: '8px', // Reduced spacing between cashback and button
@@ -206,12 +206,12 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
                         padding: '10px 20px', // Consistent padding for roundness
                         borderRadius: '50px', // Fully rounded button
                         backgroundColor: 'white',
-                        color: '#46c76b',
+                        color: '#4CAF50',
                         textTransform: 'none', // Prevent uppercase text
-                        border: '1px solid #46C76B',
+                        border: '1px solid #4CAF50',
                         boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)', // Subtle shadow
                         '&:hover': {
-                            backgroundColor: '#46C76B',
+                            backgroundColor: '#4CAF50',
                             color: 'white',
                         },
                     }}

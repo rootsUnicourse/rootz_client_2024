@@ -187,12 +187,10 @@ const Navbar = () => {
           <Box sx={{ display: "flex", gap: 2 }}>
             {user ? (
               <Avatar
+                sx={{ width: 56, height: 56,cursor: "pointer" }}
                 alt={user.name}
                 src={user.profilePicture}
                 onClick={handleAvatarClick}
-                sx={{
-                  cursor: "pointer", // Add cursor styling for better UX
-                }}
               />
             ) : (
               <Button

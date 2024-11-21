@@ -9,18 +9,35 @@ import {
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { likeCompany } from '../../API/index';
 
-const ShopCard = ({ company }) => {
+const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [hover, setHover] = useState(false);
+    const [isLiked, setIsLiked] = useState(initialIsLiked); // Track liked state
     const descriptionRef = useRef(null);
     const [descriptionHeight, setDescriptionHeight] = useState(0);
+
+    // Sync isLiked state with initialIsLiked prop
+    useEffect(() => {
+        setIsLiked(initialIsLiked);
+    }, [initialIsLiked]);
 
     useEffect(() => {
         if (descriptionRef.current) {
             setDescriptionHeight(descriptionRef.current.scrollHeight);
         }
     }, [company.description]);
+
+    const handleLike = async () => {
+        try {
+            await likeCompany(company._id);
+            setIsLiked((prev) => !prev); // Toggle the liked state
+            if (toggleLike) toggleLike(company._id); // Notify parent if needed
+        } catch (error) {
+            console.error('Error liking company:', error.message);
+        }
+    };
 
     const cardHeight = 300; // Total card height
     const bottomSectionBaseHeight = cardHeight * 0.55; // Base bottom section height
@@ -62,12 +79,13 @@ const ShopCard = ({ company }) => {
                 }}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
+                onClick={handleLike}
             >
-                {hover ? (
+                {isLiked ? (
                     <FavoriteIcon
                         sx={{
                             color: '#ff4081',
-                            transform: 'scale(0.9)', // Shrinks the icon
+                            transform: hover ? 'scale(1.1)' : 'scale(1)', // Slight grow on hover
                             transition: 'transform 0.2s ease-in-out', // Smooth animation
                         }}
                     />
@@ -75,13 +93,12 @@ const ShopCard = ({ company }) => {
                     <FavoriteBorderIcon
                         sx={{
                             color: '#ff4081',
-                            transform: hover ? 'scale(0.9)' : 'scale(1)', // Shrinking effect
+                            transform: hover ? 'scale(1.1)' : 'scale(1)', // Slight grow on hover
                             transition: 'transform 0.2s ease-in-out', // Smooth animation
                         }}
                     />
                 )}
             </IconButton>
-
 
             {/* Background Image */}
             <CardMedia
@@ -130,7 +147,6 @@ const ShopCard = ({ company }) => {
 
                     {/* Shop Name */}
                     <Typography
-
                         sx={{ textAlign: 'center', fontSize: '15px', color: '#4f4f4f' }}
                     >
                         {company.title}
@@ -190,13 +206,13 @@ const ShopCard = ({ company }) => {
                         padding: '10px 20px', // Consistent padding for roundness
                         borderRadius: '50px', // Fully rounded button
                         backgroundColor: 'white',
-                        color: "#46c76b",
+                        color: '#46c76b',
                         textTransform: 'none', // Prevent uppercase text
                         border: '1px solid #46C76B',
                         boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)', // Subtle shadow
                         '&:hover': {
                             backgroundColor: '#46C76B',
-                            color: "white",
+                            color: 'white',
                         },
                     }}
                     onClick={() => window.open(company.siteUrl, '_blank')}

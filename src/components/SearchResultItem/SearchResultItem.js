@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-const SearchResultItem = ({ company }) => {
+const SearchResultItem = ({ shop }) => {
   return (
     <Box
       sx={{
@@ -14,25 +14,25 @@ const SearchResultItem = ({ company }) => {
         textAlign: "center",
       }}
       onClick={() => {
-        // Handle click event, e.g., navigate to company page
-        window.open(company.siteUrl, "_blank"); // Open company site in a new tab
+        // Handle click event, e.g., navigate to shop page
+        window.open(shop.siteUrl, "_blank"); // Open shop site in a new tab
       }}
     >
       {/* Shop Logo */}
       <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "5px" }}>
         <img
-          src={company.image || "https://via.placeholder.com/50"}
-          alt={company.title}
+          src={shop.image || "https://via.placeholder.com/50"}
+          alt={shop.title}
           style={{ width: "100px", height: "40px", objectFit: "fit" }}
         />
       </Box>
       {/* Shop Name */}
       <Typography variant="body1" sx={{ marginBottom: "5px", color: "#666666" }}>
-        {company.title}
+        {shop.title}
       </Typography>
-      {/* Refund */}
+      {/* Cashback */}
       <Typography variant="body2" sx={{ color: "#46C76B", opacity: 0.9, fontWeight: "bold" }}>
-        {company.discount ? `${company.discount} Cashback` : "No Discount"}
+        {shop.discount ? `${shop.discount} Cashback` : "No Discount"}
       </Typography>
     </Box>
   );

@@ -13,11 +13,10 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import logo from "../../Assets/Images/Rootz_logo.png";
-import { fetchCompanysBySearch } from "../../API/index";
+import { fetchShopsBySearch } from "../../API/index"; // Updated function name
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
 import LoginModal from "../LoginModal/LoginModal";
 import { useNavigate } from "react-router-dom";
-
 
 const Navbar = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -25,7 +24,6 @@ const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [user, setUser] = useState(null); // Add user state
   const navigate = useNavigate();
-
 
   const handleOpenLoginModal = () => {
     setOpenLoginModal(true);
@@ -57,13 +55,13 @@ const Navbar = () => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchInput.trim() !== "") {
-        // Fetch matching companies
+        // Fetch matching shops
         const fetchData = async () => {
           try {
-            const response = await fetchCompanysBySearch(searchInput);
+            const response = await fetchShopsBySearch(searchInput);
             setSearchResults(response.data); // Assuming the server returns an array
           } catch (error) {
-            console.error("Error fetching companies:", error);
+            console.error("Error fetching shops:", error);
             setSearchResults([]);
           }
         };
@@ -165,9 +163,9 @@ const Navbar = () => {
                   "scrollbar-width": "none", // Firefox
                 }}
               >
-                {searchResults.map((company, index) => (
-                  <React.Fragment key={company._id}>
-                    <SearchResultItem company={company} />
+                {searchResults.map((shop, index) => (
+                  <React.Fragment key={shop._id}>
+                    <SearchResultItem shop={shop} />
                     {/* Add dotted line except after the last item */}
                     {index !== searchResults.length - 1 && (
                       <Box
@@ -187,7 +185,7 @@ const Navbar = () => {
           <Box sx={{ display: "flex", gap: 2 }}>
             {user ? (
               <Avatar
-                sx={{ width: 56, height: 56,cursor: "pointer" }}
+                sx={{ width: 56, height: 56, cursor: "pointer" }}
                 alt={user.name}
                 src={user.profilePicture}
                 onClick={handleAvatarClick}

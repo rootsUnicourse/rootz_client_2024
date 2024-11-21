@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { likeCompany } from '../../API/index';
+import { likeShop } from '../../API/index'; // Updated function name
 
-const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
+const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [hover, setHover] = useState(false);
     const [isLiked, setIsLiked] = useState(initialIsLiked); // Track liked state
@@ -27,24 +27,23 @@ const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
         if (descriptionRef.current) {
             setDescriptionHeight(descriptionRef.current.scrollHeight);
         }
-    }, [company.description]);
+    }, [shop.description]);
 
     const handleLike = async () => {
         try {
-            await likeCompany(company._id);
+            await likeShop(shop._id);
             setIsLiked((prev) => !prev); // Toggle state locally
-            if (toggleLike) toggleLike(company._id); // Notify parent if needed
+            if (toggleLike) toggleLike(shop._id); // Notify parent if needed
         } catch (error) {
-            console.error('Error liking/unliking company:', error.message);
+            console.error('Error liking/unliking shop:', error.message);
         }
     };
-    
 
     const cardHeight = 300; // Total card height
     const bottomSectionBaseHeight = cardHeight * 0.55; // Base bottom section height
 
     const additionalSpaceForDescription =
-        company.description && isHovered ? descriptionHeight : 0;
+        shop.description && isHovered ? descriptionHeight : 0;
 
     const bottomSectionHeight = bottomSectionBaseHeight + additionalSpaceForDescription;
 
@@ -104,8 +103,8 @@ const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
             {/* Background Image */}
             <CardMedia
                 component="img"
-                image={company.image || 'https://via.placeholder.com/250x100'}
-                alt={company.title}
+                image={shop.image || 'https://via.placeholder.com/250x100'}
+                alt={shop.title}
                 sx={{
                     width: '100%',
                     height: '40%',
@@ -135,8 +134,8 @@ const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
                     {/* Logo */}
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <img
-                            src={company.image || 'https://via.placeholder.com/80'}
-                            alt={company.title}
+                            src={shop.image || 'https://via.placeholder.com/80'}
+                            alt={shop.title}
                             style={{
                                 border: '3px solid #fff',
                                 width: '120px',
@@ -150,7 +149,7 @@ const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
                     <Typography
                         sx={{ textAlign: 'center', fontSize: '15px', color: '#4f4f4f' }}
                     >
-                        {company.title}
+                        {shop.title}
                     </Typography>
 
                     {/* Cashback */}
@@ -163,11 +162,11 @@ const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
                             marginBottom: '8px', // Reduced spacing between cashback and button
                         }}
                     >
-                        {company.discount ? `${company.discount} Cashback` : 'No Discount'}
+                        {shop.discount ? `${shop.discount} Cashback` : 'No Discount'}
                     </Typography>
 
                     {/* Description */}
-                    {company.description && (
+                    {shop.description && (
                         <Box
                             sx={{
                                 textAlign: 'center',
@@ -183,7 +182,7 @@ const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
                                 variant="body2"
                                 sx={{ color: '#555', lineHeight: 1.4, padding: '0 10px' }}
                             >
-                                {company.description}
+                                {shop.description}
                             </Typography>
                         </Box>
                     )}
@@ -216,7 +215,7 @@ const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
                             color: 'white',
                         },
                     }}
-                    onClick={() => window.open(company.siteUrl, '_blank')}
+                    onClick={() => window.open(shop.siteUrl, '_blank')}
                 >
                     Shop on Site
                 </Button>

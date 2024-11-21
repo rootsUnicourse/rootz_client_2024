@@ -3,24 +3,24 @@ import { Container } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 
 import ShopCard from "../ShopCard/ShopCard";
-import { fetchCompanies, fetchLikedCompanies } from "../../API/index"; // Ensure correct import paths
+import { fetchShops, fetchLikedShops } from "../../API/index"; // Ensure correct import paths
 
 function Home() {
-  const [companies, setCompanies] = useState([]);
-  const [likedCompanies, setLikedCompanies] = useState([]);
+  const [shops, setShops] = useState([]);
+  const [likedShops, setLikedShops] = useState([]);
 
-  // Fetch all companies and liked companies on mount
+  // Fetch all shops and liked shops on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch all companies
-        const { data: companiesData } = await fetchCompanies();
-        setCompanies(companiesData);
+        // Fetch all shops
+        const { data: shopsData } = await fetchShops();
+        setShops(shopsData);
 
-        // Fetch liked companies
-        const { data: likedCompaniesData } = await fetchLikedCompanies();
-        const likedCompanyIds = likedCompaniesData.map((company) => company._id);
-        setLikedCompanies(likedCompanyIds);
+        // Fetch liked shops
+        const { data: likedShopsData } = await fetchLikedShops();
+        const likedShopIds = likedShopsData.map((shop) => shop._id);
+        setLikedShops(likedShopIds);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -29,12 +29,12 @@ function Home() {
     fetchData();
   }, []);
 
-  // Toggle the like status of a company
-  const toggleLike = (companyId) => {
-    setLikedCompanies((prev) =>
-      prev.includes(companyId)
-        ? prev.filter((id) => id !== companyId) // Remove from liked
-        : [...prev, companyId] // Add to liked
+  // Toggle the like status of a shop
+  const toggleLike = (shopId) => {
+    setLikedShops((prev) =>
+      prev.includes(shopId)
+        ? prev.filter((id) => id !== shopId) // Remove from liked
+        : [...prev, shopId] // Add to liked
     );
   };
 
@@ -47,11 +47,11 @@ function Home() {
         justifyContent="center" // Centers items horizontally
         alignItems="center" // Centers items vertically (if needed)
       >
-        {companies.map((company) => (
-          <Grid2 key={company._id} xs={6} sm={6} md={3} lg={3}>
+        {shops.map((shop) => (
+          <Grid2 key={shop._id} xs={6} sm={6} md={3} lg={3}>
             <ShopCard
-              company={company}
-              isLiked={likedCompanies.includes(company._id)} // Check if the company is liked
+              shop={shop}
+              isLiked={likedShops.includes(shop._id)} // Check if the shop is liked
               toggleLike={toggleLike} // Pass the toggleLike function
             />
           </Grid2>

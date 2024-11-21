@@ -12,14 +12,18 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
+// Shop-related API calls
+export const fetchShops = () => API.get('/shops');
+export const fetchShopsBySearch = (searchQuery) => API.get('/shops/search', { params: { searchQuery } });
+export const likeShop = (shopId) => API.post('/users/like-shop', { shopId });
+export const fetchLikedShops = () => API.get('/users/liked-shops');
 
-export const fetchCompanies = () => API.get('/companies');
-export const fetchCompanysBySearch = (searchQuery) => API.get('/companies/search', { params: { searchQuery } });
+// Authentication-related API calls
 export const register = (formData) => API.post('/auth/register', formData);
 export const verifyEmail = (formData) => API.post('/auth/verify-email', formData);
 export const login = (formData) => API.post('/auth/login', formData);
 export const googleLogin = (tokenId) => API.post('/auth/google-login', { tokenId });
+
+// User-related API calls
 export const requestPasswordReset = (email) => API.post('/users/request-password-reset', { email });
 export const submitNewPassword = (token, newPassword) => API.post('/users/submit-new-password', { token, newPassword });
-export const likeCompany = (companyId) => API.post('/users/like-company', { companyId });
-export const fetchLikedCompanies = () => API.get('/users/liked-companies');

@@ -1,5 +1,5 @@
 // src/components/LoginModal.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,20 +11,23 @@ import {
   Typography,
   Snackbar,
   Alert,
+  Checkbox,
+  FormControlLabel,
+  Link,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from "@react-oauth/google"; // Keep the original import
 import {
   register,
   login,
   verifyEmail,
   googleLogin,
-  requestPasswordReset, // Import the function
+  requestPasswordReset,
 } from "../../API/index";
 
 const LoginModal = ({ open, handleClose, onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [isForgotPassword, setIsForgotPassword] = useState(false); // Add this state
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,40 +36,50 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
     verificationCode: "",
   });
   const [showVerification, setShowVerification] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const [fieldErrors, setFieldErrors] = useState({});
+  const [termsAgreed, setTermsAgreed] = useState(false);
 
-  const responseMessage = async (response) => {
-    try {
-      const tokenId = response.credential;
-      const result = await googleLogin(tokenId);
-      console.log('Google sign in successful:', result);
-      localStorage.setItem('userToken', result.data.token);
-      localStorage.setItem('userInfo', JSON.stringify(result.data.user));
-      onLogin(result.data.user);
-      handleClose();
-    } catch (error) {
-      console.error('Error during Google sign-in:', error);
-      setSnackbar({
-        open: true,
-        message: error.response?.data?.message || "Google sign-in failed.",
-        severity: 'error',
+  useEffect(() => {
+    if (!open) {
+      setTermsAgreed(false);
+      setIsSignUp(false);
+      setIsForgotPassword(false);
+      setShowVerification(false);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        verificationCode: "",
       });
     }
-  };
+  }, [open]);
 
-  const errorMessage = (error) => {
-    console.log(error);
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setFieldErrors({ ...fieldErrors, [e.target.name]: '' });
+    setFieldErrors({ ...fieldErrors, [e.target.name]: "" });
   };
 
   const handleEmailLogin = async (event) => {
     event.preventDefault();
     setFieldErrors({});
+    if (!termsAgreed) {
+      setSnackbar({
+        open: true,
+        message: "You must agree to the Terms and Conditions.",
+        severity: "error",
+      });
+      return;
+    }
     if (isSignUp) {
       // Sign-up logic
       if (formData.password !== formData.confirmPassword) {
@@ -81,16 +94,21 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         });
         setSnackbar({
           open: true,
-          message: response.data.message || "Registration successful! Please verify your email.",
-          severity: 'success',
+          message:
+            response.data.message ||
+            "Registration successful! Please verify your email.",
+          severity: "success",
         });
         setShowVerification(true);
       } catch (error) {
-        console.error("Registration Error:", error.response?.data?.message || error.message);
+        console.error(
+          "Registration Error:",
+          error.response?.data?.message || error.message
+        );
         setSnackbar({
           open: true,
           message: error.response?.data?.message || "Registration failed.",
-          severity: 'error',
+          severity: "error",
         });
       }
     } else {
@@ -106,11 +124,14 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         onLogin(user);
         handleClose();
       } catch (error) {
-        console.error("Login Error:", error.response?.data?.message || error.message);
+        console.error(
+          "Login Error:",
+          error.response?.data?.message || error.message
+        );
         setSnackbar({
           open: true,
           message: error.response?.data?.message || "Login failed.",
-          severity: 'error',
+          severity: "error",
         });
       }
     }
@@ -126,7 +147,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       setSnackbar({
         open: true,
         message: "Email verified successfully!",
-        severity: 'success',
+        severity: "success",
       });
       const { token, user } = response.data;
       localStorage.setItem("userToken", token);
@@ -134,37 +155,84 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       onLogin(user);
       handleClose();
     } catch (error) {
-      console.error("Verification Error:", error.response?.data?.message || error.message);
+      console.error(
+        "Verification Error:",
+        error.response?.data?.message || error.message
+      );
       setSnackbar({
         open: true,
         message: error.response?.data?.message || "Verification failed.",
-        severity: 'error',
+        severity: "error",
       });
     }
   };
 
   const handlePasswordResetRequest = async (event) => {
     event.preventDefault();
+    if (!termsAgreed) {
+      setSnackbar({
+        open: true,
+        message: "You must agree to the Terms and Conditions.",
+        severity: "error",
+      });
+      return;
+    }
     try {
       const response = await requestPasswordReset(formData.email);
       setSnackbar({
         open: true,
         message: response.data.message || "Password reset email sent.",
-        severity: 'success',
+        severity: "success",
       });
-      setIsForgotPassword(false); // Optionally navigate back to login form
+      setIsForgotPassword(false);
     } catch (error) {
-      console.error("Password Reset Request Error:", error.response?.data?.message || error.message);
+      console.error(
+        "Password Reset Request Error:",
+        error.response?.data?.message || error.message
+      );
       setSnackbar({
         open: true,
-        message: error.response?.data?.message || "Password reset request failed.",
-        severity: 'error',
+        message:
+          error.response?.data?.message || "Password reset request failed.",
+        severity: "error",
       });
     }
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
+  const responseMessage = async (response) => {
+    if (!termsAgreed) {
+      setSnackbar({
+        open: true,
+        message: "You must agree to the Terms and Conditions.",
+        severity: "error",
+      });
+      return;
+    }
+    try {
+      const tokenId = response.credential;
+      const result = await googleLogin(tokenId);
+      console.log("Google sign in successful:", result);
+      localStorage.setItem("userToken", result.data.token);
+      localStorage.setItem("userInfo", JSON.stringify(result.data.user));
+      onLogin(result.data.user);
+      handleClose();
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || "Google sign-in failed.",
+        severity: "error",
+      });
+    }
+  };
+
+  const errorMessage = (error) => {
+    console.log(error);
+    setSnackbar({
+      open: true,
+      message: "Google sign-in failed.",
+      severity: "error",
+    });
   };
 
   return (
@@ -176,7 +244,11 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       fullWidth
     >
       <DialogTitle id="login-dialog-title" sx={{ m: 0, p: 2 }}>
-        {isSignUp ? "Sign Up" : isForgotPassword ? "Forgot Password" : "Log In"}
+        {isSignUp
+          ? "Sign Up"
+          : isForgotPassword
+          ? "Forgot Password"
+          : "Log In"}
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -195,7 +267,12 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
           if (showVerification) {
             // Verification code input
             return (
-              <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleVerifyCode}>
+              <Box
+                component="form"
+                noValidate
+                sx={{ mt: 1 }}
+                onSubmit={handleVerifyCode}
+              >
                 <Typography variant="body1">
                   Please enter the verification code sent to your email.
                 </Typography>
@@ -230,7 +307,12 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
           } else if (isForgotPassword) {
             // Password reset request form
             return (
-              <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handlePasswordResetRequest}>
+              <Box
+                component="form"
+                noValidate
+                sx={{ mt: 1 }}
+                onSubmit={handlePasswordResetRequest}
+              >
                 <Typography variant="body1">
                   Please enter your email address to request a password reset.
                 </Typography>
@@ -248,10 +330,29 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                   error={Boolean(fieldErrors.email)}
                   helperText={fieldErrors.email}
                 />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={termsAgreed}
+                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                      name="terms"
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">
+                      I agree to the{" "}
+                      <Link href="/terms" target="_blank" rel="noopener">
+                        Terms and Conditions
+                      </Link>
+                    </Typography>
+                  }
+                />
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
+                  disabled={!termsAgreed}
                   sx={{
                     mt: 3,
                     mb: 2,
@@ -271,7 +372,12 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
           } else if (isSignUp) {
             // Sign up form
             return (
-              <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleEmailLogin}>
+              <Box
+                component="form"
+                noValidate
+                sx={{ mt: 1 }}
+                onSubmit={handleEmailLogin}
+              >
                 <TextField
                   margin="normal"
                   required
@@ -327,10 +433,29 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                   error={Boolean(fieldErrors.confirmPassword)}
                   helperText={fieldErrors.confirmPassword}
                 />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={termsAgreed}
+                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                      name="terms"
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">
+                      I agree to the{" "}
+                      <Link href="/terms" target="_blank" rel="noopener">
+                        Terms and Conditions
+                      </Link>
+                    </Typography>
+                  }
+                />
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
+                  disabled={!termsAgreed}
                   sx={{
                     mt: 3,
                     mb: 2,
@@ -342,16 +467,19 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                 </Button>
                 <Typography align="center">
                   Already have an account?
-                  <Button onClick={() => setIsSignUp(false)}>
-                    Log In
-                  </Button>
+                  <Button onClick={() => setIsSignUp(false)}>Log In</Button>
                 </Typography>
               </Box>
             );
           } else {
             // Login form
             return (
-              <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleEmailLogin}>
+              <Box
+                component="form"
+                noValidate
+                sx={{ mt: 1 }}
+                onSubmit={handleEmailLogin}
+              >
                 <TextField
                   margin="normal"
                   required
@@ -385,10 +513,29 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     Forgot Password?
                   </Button>
                 </Typography>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={termsAgreed}
+                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                      name="terms"
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">
+                      I agree to the{" "}
+                      <Link href="/terms" target="_blank" rel="noopener">
+                        Terms and Conditions
+                      </Link>
+                    </Typography>
+                  }
+                />
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
+                  disabled={!termsAgreed}
                   sx={{
                     mt: 1,
                     mb: 2,
@@ -400,15 +547,39 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                 </Button>
                 <Typography align="center">
                   Don't have an account?
-                  <Button onClick={() => setIsSignUp(true)}>
-                    Sign Up
-                  </Button>
+                  <Button onClick={() => setIsSignUp(true)}>Sign Up</Button>
                 </Typography>
                 <Box sx={{ textAlign: "center", my: 2 }}>
                   <span>or</span>
                 </Box>
                 {/* Google Login Button */}
-                <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+                <Box sx={{ position: "relative" }}>
+                  <GoogleLogin
+                    onSuccess={responseMessage}
+                    onError={errorMessage}
+                  />
+                  {!termsAgreed && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        zIndex: 1,
+                        cursor: "not-allowed",
+                      }}
+                      onClick={() => {
+                        setSnackbar({
+                          open: true,
+                          message:
+                            "You must agree to the Terms and Conditions.",
+                          severity: "error",
+                        });
+                      }}
+                    />
+                  )}
+                </Box>
               </Box>
             );
           }
@@ -420,9 +591,13 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

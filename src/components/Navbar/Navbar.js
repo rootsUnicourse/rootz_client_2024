@@ -16,12 +16,16 @@ import logo from "../../Assets/Images/Rootz_logo.png";
 import { fetchCompanysBySearch } from "../../API/index";
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
 import LoginModal from "../LoginModal/LoginModal";
+import { useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [user, setUser] = useState(null); // Add user state
+  const navigate = useNavigate();
+
 
   const handleOpenLoginModal = () => {
     setOpenLoginModal(true);
@@ -35,6 +39,10 @@ const Navbar = () => {
   const handleUserLogin = (userInfo) => {
     setUser(userInfo);
     handleCloseLoginModal();
+  };
+
+  const handleAvatarClick = () => {
+    navigate("/profile"); // Replace "/profile" with the actual route to your Profile component
   };
 
   // Retrieve user info from localStorage on component mount
@@ -67,7 +75,7 @@ const Navbar = () => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput]);
-
+  
   return (
     <AppBar position="static" sx={{ backgroundColor: "#fff", boxShadow: "none" }}>
       <Container maxWidth="lg">
@@ -180,7 +188,11 @@ const Navbar = () => {
             {user ? (
               <Avatar
                 alt={user.name}
-                src={user.profileImage || "/default-avatar.png"} // Provide a default image if profileImage is not available
+                src={user.profilePicture}
+                onClick={handleAvatarClick}
+                sx={{
+                  cursor: "pointer", // Add cursor styling for better UX
+                }}
               />
             ) : (
               <Button
@@ -191,9 +203,9 @@ const Navbar = () => {
                   opacity: 0.8,
                   border: "none",
                   borderRadius: "50px",
-                  whiteSpace: 'nowrap',     // Prevent text wrapping
-                  minWidth: '100px',        // Set a fixed minimum width
-                  flexShrink: 0,            // Prevent the button from shrinking
+                  whiteSpace: "nowrap", // Prevent text wrapping
+                  minWidth: "100px", // Set a fixed minimum width
+                  flexShrink: 0, // Prevent the button from shrinking
                   "&:hover": {
                     backgroundColor: "#39B75D",
                     opacity: 1,
@@ -203,7 +215,6 @@ const Navbar = () => {
               >
                 Log In
               </Button>
-
             )}
           </Box>
         </Toolbar>

@@ -31,7 +31,7 @@ function Home() {
         alignItems="center" // Centers items vertically (if needed)
       >
         {companies.map((company) => (
-          <Grid2 item key={company._id} xs={6} sm={6} md={3} lg={3}>
+          <Grid2 key={company._id} xs={6} sm={6} md={3} lg={3}>
             <ShopCard company={company} />
           </Grid2>
         ))}

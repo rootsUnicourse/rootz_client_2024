@@ -5,6 +5,7 @@ import Home from './components/HomePage/HomePage';
 import Layout from './components/Layout/Layout';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import PasswordReset from './components/PasswordReset/PasswordReset';
+import Profile from './components/Profile/Profile';
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/password-reset/:token" element={<PasswordReset/>} />
+                        <Route path="/profile" element={<Profile />} /> 
                         {/* Add more routes as needed */}
                     </Routes>
                 </Layout>

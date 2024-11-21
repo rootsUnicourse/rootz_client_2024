@@ -16,7 +16,8 @@ import {
   Link,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { GoogleLogin } from "@react-oauth/google"; // Keep the original import
+import GoogleIcon from "@mui/icons-material/Google"; // Import Google Icon
+import { GoogleLogin } from "@react-oauth/google"; // Original GoogleLogin import
 import {
   register,
   login,
@@ -46,6 +47,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
 
   useEffect(() => {
     if (!open) {
+      // Reset all states when the modal is closed
       setTermsAgreed(false);
       setIsSignUp(false);
       setIsForgotPassword(false);
@@ -57,6 +59,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         confirmPassword: "",
         verificationCode: "",
       });
+      setFieldErrors({});
     }
   }, [open]);
 
@@ -200,14 +203,6 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
   };
 
   const responseMessage = async (response) => {
-    if (!termsAgreed) {
-      setSnackbar({
-        open: true,
-        message: "You must agree to the Terms and Conditions.",
-        severity: "error",
-      });
-      return;
-    }
     try {
       const tokenId = response.credential;
       const result = await googleLogin(tokenId);
@@ -235,373 +230,403 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
     });
   };
 
-  return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="login-dialog-title"
-      maxWidth="xs"
-      fullWidth
-    >
-      <DialogTitle id="login-dialog-title" sx={{ m: 0, p: 2 }}>
-        {isSignUp
-          ? "Sign Up"
-          : isForgotPassword
-          ? "Forgot Password"
-          : "Log In"}
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent dividers>
-        {(() => {
-          if (showVerification) {
-            // Verification code input
-            return (
-              <Box
-                component="form"
-                noValidate
-                sx={{ mt: 1 }}
-                onSubmit={handleVerifyCode}
-              >
-                <Typography variant="body1">
-                  Please enter the verification code sent to your email.
-                </Typography>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="verificationCode"
-                  label="Verification Code"
-                  name="verificationCode"
-                  autoFocus
-                  value={formData.verificationCode}
-                  onChange={handleChange}
-                  error={Boolean(fieldErrors.verificationCode)}
-                  helperText={fieldErrors.verificationCode}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{
-                    mt: 3,
-                    mb: 2,
-                    backgroundColor: "#39B75D",
-                    "&:hover": { backgroundColor: "#39B75D" },
-                  }}
-                >
-                  Verify Email
-                </Button>
-              </Box>
-            );
-          } else if (isForgotPassword) {
-            // Password reset request form
-            return (
-              <Box
-                component="form"
-                noValidate
-                sx={{ mt: 1 }}
-                onSubmit={handlePasswordResetRequest}
-              >
-                <Typography variant="body1">
-                  Please enter your email address to request a password reset.
-                </Typography>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  value={formData.email}
-                  onChange={handleChange}
-                  error={Boolean(fieldErrors.email)}
-                  helperText={fieldErrors.email}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={termsAgreed}
-                      onChange={(e) => setTermsAgreed(e.target.checked)}
-                      name="terms"
-                      color="primary"
-                    />
-                  }
-                  label={
-                    <Typography variant="body2">
-                      I agree to the{" "}
-                      <Link href="/terms" target="_blank" rel="noopener">
-                        Terms and Conditions
-                      </Link>
-                    </Typography>
-                  }
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  disabled={!termsAgreed}
-                  sx={{
-                    mt: 3,
-                    mb: 2,
-                    backgroundColor: "#39B75D",
-                    "&:hover": { backgroundColor: "#39B75D" },
-                  }}
-                >
-                  Send Password Reset Email
-                </Button>
-                <Typography align="center">
-                  <Button onClick={() => setIsForgotPassword(false)}>
-                    Back to Login
-                  </Button>
-                </Typography>
-              </Box>
-            );
-          } else if (isSignUp) {
-            // Sign up form
-            return (
-              <Box
-                component="form"
-                noValidate
-                sx={{ mt: 1 }}
-                onSubmit={handleEmailLogin}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="name"
-                  label="Name"
-                  name="name"
-                  autoComplete="name"
-                  autoFocus
-                  value={formData.name}
-                  onChange={handleChange}
-                  error={Boolean(fieldErrors.name)}
-                  helperText={fieldErrors.name}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  error={Boolean(fieldErrors.email)}
-                  helperText={fieldErrors.email}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  error={Boolean(fieldErrors.password)}
-                  helperText={fieldErrors.password}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  id="confirmPassword"
-                  autoComplete="new-password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  error={Boolean(fieldErrors.confirmPassword)}
-                  helperText={fieldErrors.confirmPassword}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={termsAgreed}
-                      onChange={(e) => setTermsAgreed(e.target.checked)}
-                      name="terms"
-                      color="primary"
-                    />
-                  }
-                  label={
-                    <Typography variant="body2">
-                      I agree to the{" "}
-                      <Link href="/terms" target="_blank" rel="noopener">
-                        Terms and Conditions
-                      </Link>
-                    </Typography>
-                  }
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  disabled={!termsAgreed}
-                  sx={{
-                    mt: 3,
-                    mb: 2,
-                    backgroundColor: "#39B75D",
-                    "&:hover": { backgroundColor: "#39B75D" },
-                  }}
-                >
-                  Sign Up
-                </Button>
-                <Typography align="center">
-                  Already have an account?
-                  <Button onClick={() => setIsSignUp(false)}>Log In</Button>
-                </Typography>
-              </Box>
-            );
-          } else {
-            // Login form
-            return (
-              <Box
-                component="form"
-                noValidate
-                sx={{ mt: 1 }}
-                onSubmit={handleEmailLogin}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  value={formData.email}
-                  onChange={handleChange}
-                  error={Boolean(fieldErrors.email)}
-                  helperText={fieldErrors.email}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  error={Boolean(fieldErrors.password)}
-                  helperText={fieldErrors.password}
-                />
-                <Typography align="right">
-                  <Button onClick={() => setIsForgotPassword(true)}>
-                    Forgot Password?
-                  </Button>
-                </Typography>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={termsAgreed}
-                      onChange={(e) => setTermsAgreed(e.target.checked)}
-                      name="terms"
-                      color="primary"
-                    />
-                  }
-                  label={
-                    <Typography variant="body2">
-                      I agree to the{" "}
-                      <Link href="/terms" target="_blank" rel="noopener">
-                        Terms and Conditions
-                      </Link>
-                    </Typography>
-                  }
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  disabled={!termsAgreed}
-                  sx={{
-                    mt: 1,
-                    mb: 2,
-                    backgroundColor: "#39B75D",
-                    "&:hover": { backgroundColor: "#39B75D" },
-                  }}
-                >
-                  Sign In
-                </Button>
-                <Typography align="center">
-                  Don't have an account?
-                  <Button onClick={() => setIsSignUp(true)}>Sign Up</Button>
-                </Typography>
-                <Box sx={{ textAlign: "center", my: 2 }}>
-                  <span>or</span>
-                </Box>
-                {/* Google Login Button */}
-                <Box sx={{ position: "relative" }}>
-                  <GoogleLogin
-                    onSuccess={responseMessage}
-                    onError={errorMessage}
-                  />
-                  {!termsAgreed && (
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        zIndex: 1,
-                        cursor: "not-allowed",
-                      }}
-                      onClick={() => {
-                        setSnackbar({
-                          open: true,
-                          message:
-                            "You must agree to the Terms and Conditions.",
-                          severity: "error",
-                        });
-                      }}
-                    />
-                  )}
-                </Box>
-              </Box>
-            );
-          }
-        })()}
-      </DialogContent>
+  const handleGoogleLoginClick = () => {
+    if (!termsAgreed) {
+      setSnackbar({
+        open: true,
+        message: "You must agree to the Terms and Conditions.",
+        severity: "error",
+      });
+      return;
+    }
+    // Proceed with Google Login by triggering the GoogleLogin component
+    // The GoogleLogin component handles its own click, so no further action is needed here
+    // Users must click the GoogleLogin button to proceed
+    // Alternatively, you can use a ref or other methods to trigger the click
+  };
 
-      {/* Snackbar for messages */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+  return (
+    <>
+      {/* Main Authentication Dialog */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="login-dialog-title"
+        maxWidth="xs"
+        fullWidth
       >
-        <Alert
+        <DialogTitle id="login-dialog-title" sx={{ m: 0, p: 2 }}>
+          {isSignUp
+            ? "Sign Up"
+            : isForgotPassword
+            ? "Forgot Password"
+            : "Log In"}
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          {(() => {
+            if (showVerification) {
+              // Verification code input
+              return (
+                <Box
+                  component="form"
+                  noValidate
+                  sx={{ mt: 1 }}
+                  onSubmit={handleVerifyCode}
+                >
+                  <Typography variant="body1">
+                    Please enter the verification code sent to your email.
+                  </Typography>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="verificationCode"
+                    label="Verification Code"
+                    name="verificationCode"
+                    autoFocus
+                    value={formData.verificationCode}
+                    onChange={handleChange}
+                    error={Boolean(fieldErrors.verificationCode)}
+                    helperText={fieldErrors.verificationCode}
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      backgroundColor: "#39B75D",
+                      "&:hover": { backgroundColor: "#39B75D" },
+                    }}
+                  >
+                    Verify Email
+                  </Button>
+                </Box>
+              );
+            } else if (isForgotPassword) {
+              // Password reset request form
+              return (
+                <Box
+                  component="form"
+                  noValidate
+                  sx={{ mt: 1 }}
+                  onSubmit={handlePasswordResetRequest}
+                >
+                  <Typography variant="body1">
+                    Please enter your email address to request a password reset.
+                  </Typography>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={Boolean(fieldErrors.email)}
+                    helperText={fieldErrors.email}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={termsAgreed}
+                        onChange={(e) => setTermsAgreed(e.target.checked)}
+                        name="terms"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      <Typography variant="body2">
+                        I agree to the{" "}
+                        <Link
+                          href="/rootz_terms.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Terms and Conditions
+                        </Link>
+                      </Typography>
+                    }
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    disabled={!termsAgreed}
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      backgroundColor: "#39B75D",
+                      "&:hover": { backgroundColor: "#39B75D" },
+                    }}
+                  >
+                    Send Password Reset Email
+                  </Button>
+                  <Typography align="center">
+                    <Button onClick={() => setIsForgotPassword(false)}>
+                      Back to Login
+                    </Button>
+                  </Typography>
+                </Box>
+              );
+            } else if (isSignUp) {
+              // Sign up form
+              return (
+                <Box
+                  component="form"
+                  noValidate
+                  sx={{ mt: 1 }}
+                  onSubmit={handleEmailLogin}
+                >
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="name"
+                    label="Name"
+                    name="name"
+                    autoComplete="name"
+                    autoFocus
+                    value={formData.name}
+                    onChange={handleChange}
+                    error={Boolean(fieldErrors.name)}
+                    helperText={fieldErrors.name}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={Boolean(fieldErrors.email)}
+                    helperText={fieldErrors.email}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="new-password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    error={Boolean(fieldErrors.password)}
+                    helperText={fieldErrors.password}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                    id="confirmPassword"
+                    autoComplete="new-password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    error={Boolean(fieldErrors.confirmPassword)}
+                    helperText={fieldErrors.confirmPassword}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={termsAgreed}
+                        onChange={(e) => setTermsAgreed(e.target.checked)}
+                        name="terms"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      <Typography variant="body2">
+                        I agree to the{" "}
+                        <Link
+                          href="/rootz_terms.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Terms and Conditions
+                        </Link>
+                      </Typography>
+                    }
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    disabled={!termsAgreed}
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      backgroundColor: "#39B75D",
+                      "&:hover": { backgroundColor: "#39B75D" },
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                  <Typography align="center">
+                    Already have an account?
+                    <Button onClick={() => setIsSignUp(false)}>Log In</Button>
+                  </Typography>
+                </Box>
+              );
+            } else {
+              // Login form
+              return (
+                <Box
+                  component="form"
+                  noValidate
+                  sx={{ mt: 1 }}
+                  onSubmit={handleEmailLogin}
+                >
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={Boolean(fieldErrors.email)}
+                    helperText={fieldErrors.email}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    error={Boolean(fieldErrors.password)}
+                    helperText={fieldErrors.password}
+                  />
+                  <Typography align="right">
+                    <Button onClick={() => setIsForgotPassword(true)}>
+                      Forgot Password?
+                    </Button>
+                  </Typography>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={termsAgreed}
+                        onChange={(e) => setTermsAgreed(e.target.checked)}
+                        name="terms"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      <Typography variant="body2">
+                        I agree to the{" "}
+                        <Link
+                          href="/rootz_terms.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Terms and Conditions
+                        </Link>
+                      </Typography>
+                    }
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    disabled={!termsAgreed}
+                    sx={{
+                      mt: 1,
+                      mb: 2,
+                      backgroundColor: "#39B75D",
+                      "&:hover": { backgroundColor: "#39B75D" },
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                  <Typography align="center">
+                    Don't have an account?
+                    <Button onClick={() => setIsSignUp(true)}>Sign Up</Button>
+                  </Typography>
+                  <Box sx={{ textAlign: "center", my: 2 }}>
+                    <span>or</span>
+                  </Box>
+                  {/* Google Login Button */}
+                  <Box sx={{ position: "relative", display: "inline-block", width: "100%" }}>
+                    <GoogleLogin
+                      onSuccess={responseMessage}
+                      onError={errorMessage}
+                    />
+                    {!termsAgreed && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          width: "100%",
+                          height: "100%",
+                          zIndex: 1,
+                          cursor: "not-allowed",
+                          backgroundColor: "rgba(255, 255, 255, 0)", // Transparent overlay
+                        }}
+                        onClick={() => {
+                          setSnackbar({
+                            open: true,
+                            message: "You must agree to the Terms and Conditions.",
+                            severity: "error",
+                          });
+                        }}
+                      />
+                    )}
+                  </Box>
+                </Box>
+              );
+            }
+          })()}
+        </DialogContent>
+
+        {/* Snackbar for messages */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
           onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Dialog>
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </Dialog>
+    </>
   );
 };
 

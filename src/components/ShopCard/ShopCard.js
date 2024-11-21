@@ -32,12 +32,13 @@ const ShopCard = ({ company, isLiked: initialIsLiked = false, toggleLike }) => {
     const handleLike = async () => {
         try {
             await likeCompany(company._id);
-            setIsLiked((prev) => !prev); // Toggle the liked state
+            setIsLiked((prev) => !prev); // Toggle state locally
             if (toggleLike) toggleLike(company._id); // Notify parent if needed
         } catch (error) {
-            console.error('Error liking company:', error.message);
+            console.error('Error liking/unliking company:', error.message);
         }
     };
+    
 
     const cardHeight = 300; // Total card height
     const bottomSectionBaseHeight = cardHeight * 0.55; // Base bottom section height

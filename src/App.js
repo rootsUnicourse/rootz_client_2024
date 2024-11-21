@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/HomePage/HomePage';
 import Layout from './components/Layout/Layout';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import PasswordReset from './components/PasswordReset/PasswordReset';
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                 <Layout>
                     <Routes>
                         <Route path="/" element={<Home />} />
+                        <Route path="/password-reset/:token" element={<PasswordReset/>} />
                         {/* Add more routes as needed */}
                     </Routes>
                 </Layout>

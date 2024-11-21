@@ -1,3 +1,4 @@
+// src/components/LoginModal.js
 import React, { useState } from "react";
 import {
   Dialog,
@@ -9,15 +10,21 @@ import {
   Button,
   Typography,
   Snackbar,
-  Alert, // Import Alert
-  FormHelperText, // Import FormHelperText
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { GoogleLogin } from '@react-oauth/google';
-import { register, login, verifyEmail, googleLogin } from "../../API/index";
+import {
+  register,
+  login,
+  verifyEmail,
+  googleLogin,
+  requestPasswordReset, // Import the function
+} from "../../API/index";
 
 const LoginModal = ({ open, handleClose, onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false); // Add this state
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,10 +32,9 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
     confirmPassword: "",
     verificationCode: "",
   });
-
   const [showVerification, setShowVerification] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' }); // Snackbar state
-  const [fieldErrors, setFieldErrors] = useState({}); // Field-specific errors
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const responseMessage = async (response) => {
     try {
@@ -55,12 +61,12 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setFieldErrors({ ...fieldErrors, [e.target.name]: '' }); // Clear field error on change
+    setFieldErrors({ ...fieldErrors, [e.target.name]: '' });
   };
 
   const handleEmailLogin = async (event) => {
     event.preventDefault();
-    setFieldErrors({}); // Reset field errors
+    setFieldErrors({});
     if (isSignUp) {
       // Sign-up logic
       if (formData.password !== formData.confirmPassword) {
@@ -137,6 +143,26 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
     }
   };
 
+  const handlePasswordResetRequest = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await requestPasswordReset(formData.email);
+      setSnackbar({
+        open: true,
+        message: response.data.message || "Password reset email sent.",
+        severity: 'success',
+      });
+      setIsForgotPassword(false); // Optionally navigate back to login form
+    } catch (error) {
+      console.error("Password Reset Request Error:", error.response?.data?.message || error.message);
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || "Password reset request failed.",
+        severity: 'error',
+      });
+    }
+  };
+
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
   };
@@ -150,7 +176,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       fullWidth
     >
       <DialogTitle id="login-dialog-title" sx={{ m: 0, p: 2 }}>
-        {isSignUp ? "Sign Up" : "Log In"}
+        {isSignUp ? "Sign Up" : isForgotPassword ? "Forgot Password" : "Log In"}
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -165,132 +191,228 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        {!showVerification ? (
-          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleEmailLogin}>
-            {isSignUp && (
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="name"
-                label="Name"
-                name="name"
-                autoComplete="name"
-                autoFocus
-                value={formData.name}
-                onChange={handleChange}
-                error={Boolean(fieldErrors.name)}
-                helperText={fieldErrors.name}
-              />
-            )}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus={!isSignUp}
-              value={formData.email}
-              onChange={handleChange}
-              error={Boolean(fieldErrors.email)}
-              helperText={fieldErrors.email}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete={isSignUp ? "new-password" : "current-password"}
-              value={formData.password}
-              onChange={handleChange}
-              error={Boolean(fieldErrors.password)}
-              helperText={fieldErrors.password}
-            />
-            {isSignUp && (
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="confirmPassword"
-                label="Confirm Password"
-                type="password"
-                id="confirmPassword"
-                autoComplete="new-password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                error={Boolean(fieldErrors.confirmPassword)}
-                helperText={fieldErrors.confirmPassword}
-              />
-            )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                mb: 2,
-                backgroundColor: "#39B75D",
-                "&:hover": { backgroundColor: "#39B75D" },
-              }}
-            >
-              {isSignUp ? "Sign Up" : "Sign In"}
-            </Button>
-            <Typography align="center">
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}
-              <Button onClick={() => setIsSignUp(!isSignUp)}>
-                {isSignUp ? "Log In" : "Sign Up"}
-              </Button>
-            </Typography>
-          </Box>
-        ) : (
-          // Verification Code Input
-          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleVerifyCode}>
-            <Typography variant="body1">
-              Please enter the verification code sent to your email.
-            </Typography>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="verificationCode"
-              label="Verification Code"
-              name="verificationCode"
-              autoFocus
-              value={formData.verificationCode}
-              onChange={handleChange}
-              error={Boolean(fieldErrors.verificationCode)}
-              helperText={fieldErrors.verificationCode}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                mb: 2,
-                backgroundColor: "#39B75D",
-                "&:hover": { backgroundColor: "#39B75D" },
-              }}
-            >
-              Verify Email
-            </Button>
-          </Box>
-        )}
-
-        {!isSignUp && !showVerification && (
-          <>
-            <Box sx={{ textAlign: "center", my: 2 }}>
-              <span>or</span>
-            </Box>
-            {/* Google Login Button */}
-            <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
-          </>
-        )}
+        {(() => {
+          if (showVerification) {
+            // Verification code input
+            return (
+              <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleVerifyCode}>
+                <Typography variant="body1">
+                  Please enter the verification code sent to your email.
+                </Typography>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="verificationCode"
+                  label="Verification Code"
+                  name="verificationCode"
+                  autoFocus
+                  value={formData.verificationCode}
+                  onChange={handleChange}
+                  error={Boolean(fieldErrors.verificationCode)}
+                  helperText={fieldErrors.verificationCode}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    backgroundColor: "#39B75D",
+                    "&:hover": { backgroundColor: "#39B75D" },
+                  }}
+                >
+                  Verify Email
+                </Button>
+              </Box>
+            );
+          } else if (isForgotPassword) {
+            // Password reset request form
+            return (
+              <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handlePasswordResetRequest}>
+                <Typography variant="body1">
+                  Please enter your email address to request a password reset.
+                </Typography>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={Boolean(fieldErrors.email)}
+                  helperText={fieldErrors.email}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    backgroundColor: "#39B75D",
+                    "&:hover": { backgroundColor: "#39B75D" },
+                  }}
+                >
+                  Send Password Reset Email
+                </Button>
+                <Typography align="center">
+                  <Button onClick={() => setIsForgotPassword(false)}>
+                    Back to Login
+                  </Button>
+                </Typography>
+              </Box>
+            );
+          } else if (isSignUp) {
+            // Sign up form
+            return (
+              <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleEmailLogin}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="name"
+                  label="Name"
+                  name="name"
+                  autoComplete="name"
+                  autoFocus
+                  value={formData.name}
+                  onChange={handleChange}
+                  error={Boolean(fieldErrors.name)}
+                  helperText={fieldErrors.name}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={Boolean(fieldErrors.email)}
+                  helperText={fieldErrors.email}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  error={Boolean(fieldErrors.password)}
+                  helperText={fieldErrors.password}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  autoComplete="new-password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  error={Boolean(fieldErrors.confirmPassword)}
+                  helperText={fieldErrors.confirmPassword}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    backgroundColor: "#39B75D",
+                    "&:hover": { backgroundColor: "#39B75D" },
+                  }}
+                >
+                  Sign Up
+                </Button>
+                <Typography align="center">
+                  Already have an account?
+                  <Button onClick={() => setIsSignUp(false)}>
+                    Log In
+                  </Button>
+                </Typography>
+              </Box>
+            );
+          } else {
+            // Login form
+            return (
+              <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleEmailLogin}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={Boolean(fieldErrors.email)}
+                  helperText={fieldErrors.email}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  error={Boolean(fieldErrors.password)}
+                  helperText={fieldErrors.password}
+                />
+                <Typography align="right">
+                  <Button onClick={() => setIsForgotPassword(true)}>
+                    Forgot Password?
+                  </Button>
+                </Typography>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 1,
+                    mb: 2,
+                    backgroundColor: "#39B75D",
+                    "&:hover": { backgroundColor: "#39B75D" },
+                  }}
+                >
+                  Sign In
+                </Button>
+                <Typography align="center">
+                  Don't have an account?
+                  <Button onClick={() => setIsSignUp(true)}>
+                    Sign Up
+                  </Button>
+                </Typography>
+                <Box sx={{ textAlign: "center", my: 2 }}>
+                  <span>or</span>
+                </Box>
+                {/* Google Login Button */}
+                <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+              </Box>
+            );
+          }
+        })()}
       </DialogContent>
 
       {/* Snackbar for messages */}

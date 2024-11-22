@@ -16,7 +16,6 @@ import {
   Link,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import GoogleIcon from "@mui/icons-material/Google"; // Import Google Icon
 import { GoogleLogin } from "@react-oauth/google"; // Original GoogleLogin import
 import {
   register,
@@ -228,21 +227,6 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       message: "Google sign-in failed.",
       severity: "error",
     });
-  };
-
-  const handleGoogleLoginClick = () => {
-    if (!termsAgreed) {
-      setSnackbar({
-        open: true,
-        message: "You must agree to the Terms and Conditions.",
-        severity: "error",
-      });
-      return;
-    }
-    // Proceed with Google Login by triggering the GoogleLogin component
-    // The GoogleLogin component handles its own click, so no further action is needed here
-    // Users must click the GoogleLogin button to proceed
-    // Alternatively, you can use a ref or other methods to trigger the click
   };
 
   return (

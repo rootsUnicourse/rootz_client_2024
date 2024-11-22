@@ -4,12 +4,14 @@ import Grid2 from "@mui/material/Grid2";
 
 import ShopCard from "../ShopCard/ShopCard";
 import { fetchShops, fetchLikedShops } from "../../API/index"; // Ensure correct import paths
+import { useAuth } from "../../AuthContext"; // Import AuthContext to track login state
 
 function Home() {
+  const { isLoggedIn } = useAuth(); // Get login state from AuthContext
   const [shops, setShops] = useState([]);
   const [likedShops, setLikedShops] = useState([]);
 
-  // Fetch all shops and liked shops on mount
+  // Fetch all shops and liked shops
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -18,16 +20,20 @@ function Home() {
         setShops(shopsData);
 
         // Fetch liked shops
-        const { data: likedShopsData } = await fetchLikedShops();
-        const likedShopIds = likedShopsData.map((shop) => shop._id);
-        setLikedShops(likedShopIds);
+        if (isLoggedIn) {
+          const { data: likedShopsData } = await fetchLikedShops();
+          const likedShopIds = likedShopsData.map((shop) => shop._id);
+          setLikedShops(likedShopIds);
+        } else {
+          setLikedShops([]); // Clear liked shops if logged out
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [isLoggedIn]); // Re-fetch when login state changes
 
   // Toggle the like status of a shop
   const toggleLike = (shopId) => {

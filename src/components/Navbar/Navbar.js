@@ -16,6 +16,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../AuthContext"; // Import the Auth context
 import logo from "../../Assets/Images/Rootz_logo.png";
 import LoginModal from "../LoginModal/LoginModal";
+import { fetchShopsBySearch } from "../../API/index";
+import SearchResultItem from "../SearchResultItem/SearchResultItem";
 
 const Navbar = () => {
   const { isLoggedIn, login, logout } = useAuth(); // Use AuthContext
@@ -24,6 +26,7 @@ const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
   // Fetch user data from localStorage when isLoggedIn changes
   useEffect(() => {
@@ -34,6 +37,29 @@ const Navbar = () => {
       setUser(null);
     }
   }, [isLoggedIn]);
+
+  // Debounce search input
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchInput.trim() !== "") {
+        const fetchData = async () => {
+          try {
+            const response = await fetchShopsBySearch(searchInput);
+            setSearchResults(response.data);
+          } catch (error) {
+            console.error("Error fetching shops:", error);
+            setSearchResults([]);
+          }
+        };
+        fetchData();
+      } else {
+        setSearchResults([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInput]);
+
 
   const handleOpenLoginModal = () => {
     setOpenLoginModal(true);
@@ -130,6 +156,41 @@ const Navbar = () => {
                 },
               }}
             />
+            {searchResults.length > 0 && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  right: 0,
+                  backgroundColor: "white",
+                  zIndex: 1000,
+                  maxHeight: "300px",
+                  overflowY: "auto",
+                  border: "1px solid #ccc",
+                  marginTop: "5px",
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                  "-ms-overflow-style": "none",
+                  "scrollbar-width": "none",
+                }}
+              >
+                {searchResults.map((shop, index) => (
+                  <React.Fragment key={shop._id}>
+                    <SearchResultItem shop={shop} />
+                    {index !== searchResults.length - 1 && (
+                      <Box
+                        sx={{
+                          borderBottom: "1px dotted #ccc",
+                          margin: "0 10px",
+                        }}
+                      />
+                    )}
+                  </React.Fragment>
+                ))}
+              </Box>
+            )}
           </Box>
 
           {/* Login or User Menu */}

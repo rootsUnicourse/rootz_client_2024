@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Typography, Grid, Card, CardContent, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Avatar, Box, Typography, Grid, Card, CardContent, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
-    const navigate = useNavigate();
 
     // Demo data for balance and transactions
     const demoBalance = {

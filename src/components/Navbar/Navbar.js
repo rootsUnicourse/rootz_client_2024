@@ -9,7 +9,7 @@ import {
   Avatar,
   TextField,
   InputAdornment,
-  Typography
+  Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,7 +21,6 @@ const Navbar = () => {
   const { isLoggedIn, login, logout } = useAuth(); // Use AuthContext
   const [user, setUser] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [anchorEl, setAnchorEl] = useState(null); // For user menu
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -58,10 +57,6 @@ const Navbar = () => {
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev); // Toggle dropdown visibility
-  };
-
-  const closeDropdown = () => {
-    setDropdownOpen(false); // Close dropdown
   };
 
   return (
@@ -138,7 +133,7 @@ const Navbar = () => {
           </Box>
 
           {/* Login or User Menu */}
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, position: "relative" }}>
             {isLoggedIn ? (
               <>
                 <Avatar
@@ -151,14 +146,14 @@ const Navbar = () => {
                   <Box
                     sx={{
                       position: "absolute",
-                      top: "80px", // Below the avatar
+                      top: "60px", // Below the avatar
                       right: 0,
                       backgroundColor: "white",
                       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                       borderRadius: "8px",
                       zIndex: 10,
                       padding: "10px",
-                      width: "80px",
+                      minWidth: "100px",
                     }}
                   >
                     <Typography
@@ -167,6 +162,11 @@ const Navbar = () => {
                         color: "black",
                         cursor: "pointer",
                         fontSize: "16px",
+                        fontWeight: "bold",
+                        padding: "8px",
+                        "&:hover": {
+                          backgroundColor: "#f1f1f1",
+                        },
                       }}
                     >
                       Logout

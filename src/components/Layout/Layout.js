@@ -1,22 +1,24 @@
-import React from 'react';
-import Navbar from '../Navbar/Navbar';
-import { Box } from '@mui/material';
+import React from "react";
+import Navbar from "../Navbar/Navbar";
+import SubNavbar from "../SubNavbar/SubNavbar";
+import { Box } from "@mui/material";
+import { useAuth } from "../../AuthContext";
 
 const Layout = ({ children }) => {
+    const { isLoggedIn } = useAuth();
+
     return (
         <Box
             sx={{
-                padding: "0", // Ensures no extra padding
-                backgroundColor: '#f1f1f1',
+                padding: "0",
+                backgroundColor: "#f1f1f1",
             }}
         >
-            {/* Navbar */}
             <Navbar />
-
-            {/* Main Content */}
+            {isLoggedIn && <SubNavbar />}
             <main
                 style={{
-                    marginTop: "20px", // Adds space below the Navbar
+                    marginTop: "20px",
                 }}
             >
                 {children}

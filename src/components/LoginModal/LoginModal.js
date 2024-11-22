@@ -206,10 +206,9 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
     try {
       const tokenId = response.credential;
       const result = await googleLogin(tokenId);
-      console.log("Google sign in successful:", result);
       localStorage.setItem("userToken", result.data.token);
       localStorage.setItem("userInfo", JSON.stringify(result.data.user));
-      onLogin(result.data.user);
+      onLogin(result.data.user); // Update context with user info
       handleClose();
     } catch (error) {
       console.error("Error during Google sign-in:", error);
@@ -220,6 +219,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       });
     }
   };
+
 
   const errorMessage = (error) => {
     console.log(error);
@@ -259,8 +259,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
           {isSignUp
             ? "Sign Up"
             : isForgotPassword
-            ? "Forgot Password"
-            : "Log In"}
+              ? "Forgot Password"
+              : "Log In"}
           <IconButton
             aria-label="close"
             onClick={handleClose}

@@ -5,25 +5,36 @@ import {
   Container,
   Box,
   Button,
-  TextField,
   IconButton,
+  Avatar,
+  TextField,
   InputAdornment,
-  Avatar, // Import Avatar
+  Typography
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthContext"; // Import the Auth context
 import logo from "../../Assets/Images/Rootz_logo.png";
-import { fetchShopsBySearch } from "../../API/index"; // Updated function name
-import SearchResultItem from "../SearchResultItem/SearchResultItem";
 import LoginModal from "../LoginModal/LoginModal";
-import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const { isLoggedIn, login, logout } = useAuth(); // Use AuthContext
+  const [user, setUser] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null); // For user menu
   const [openLoginModal, setOpenLoginModal] = useState(false);
-  const [user, setUser] = useState(null); // Add user state
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Fetch user data from localStorage when isLoggedIn changes
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userInfo");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
+    }
+  }, [isLoggedIn]);
 
   const handleOpenLoginModal = () => {
     setOpenLoginModal(true);
@@ -33,69 +44,53 @@ const Navbar = () => {
     setOpenLoginModal(false);
   };
 
-  // Function to update user state after login
-  const handleUserLogin = (userInfo) => {
-    setUser(userInfo);
+  const handleLogin = (userInfo) => {
+    login(userInfo); // Update context
+    setUser(userInfo); // Set local state
     handleCloseLoginModal();
   };
 
-  const handleAvatarClick = () => {
-    navigate("/profile"); // Replace "/profile" with the actual route to your Profile component
+  const handleLogout = () => {
+    logout(); // Update context
+    setDropdownOpen(false); // Close dropdown
+    navigate("/"); // Redirect to home
   };
 
-  // Retrieve user info from localStorage on component mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem("userInfo");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev); // Toggle dropdown visibility
+  };
 
-  // Debounce API calls to prevent excessive requests
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (searchInput.trim() !== "") {
-        // Fetch matching shops
-        const fetchData = async () => {
-          try {
-            const response = await fetchShopsBySearch(searchInput);
-            setSearchResults(response.data); // Assuming the server returns an array
-          } catch (error) {
-            console.error("Error fetching shops:", error);
-            setSearchResults([]);
-          }
-        };
-        fetchData();
-      } else {
-        setSearchResults([]);
-      }
-    }, 500); // Adjust the debounce delay as needed
+  const closeDropdown = () => {
+    setDropdownOpen(false); // Close dropdown
+  };
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchInput]);
-  
   return (
     <AppBar position="static" sx={{ backgroundColor: "#fff", boxShadow: "none" }}>
       <Container maxWidth="lg">
         <Toolbar
-          sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          {/* Left: Logo */}
+          {/* Logo */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link to="/" style={{ textDecoration: "none" }}>
               <IconButton edge="start" color="inherit" sx={{ padding: 0 }}>
-                <img
-                  src={logo}
-                  alt="Logo"
-                  style={{ width: "310px", height: "100px" }}
-                />
+                <img src={logo} alt="Logo" style={{ width: "310px", height: "100px" }} />
               </IconButton>
             </Link>
           </Box>
 
-          {/* Center: Search Bar */}
+          {/* Search Bar */}
           <Box
-            sx={{ flexGrow: 0, marginRight: "100px", width: "400px", position: "relative" }}
+            sx={{
+              flexGrow: 0,
+              marginRight: "100px",
+              width: "400px",
+              position: "relative",
+            }}
           >
             <TextField
               variant="outlined"
@@ -140,56 +135,45 @@ const Navbar = () => {
                 },
               }}
             />
-
-            {/* Search Results Dropdown */}
-            {searchResults.length > 0 && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  right: 0,
-                  backgroundColor: "white",
-                  zIndex: 1000,
-                  maxHeight: "300px",
-                  overflowY: "auto",
-                  border: "1px solid #ccc",
-                  marginTop: "5px",
-                  // Hide scrollbar
-                  "&::-webkit-scrollbar": {
-                    display: "none",
-                  },
-                  "-ms-overflow-style": "none", // IE and Edge
-                  "scrollbar-width": "none", // Firefox
-                }}
-              >
-                {searchResults.map((shop, index) => (
-                  <React.Fragment key={shop._id}>
-                    <SearchResultItem shop={shop} />
-                    {/* Add dotted line except after the last item */}
-                    {index !== searchResults.length - 1 && (
-                      <Box
-                        sx={{
-                          borderBottom: "1px dotted #ccc",
-                          margin: "0 10px",
-                        }}
-                      />
-                    )}
-                  </React.Fragment>
-                ))}
-              </Box>
-            )}
           </Box>
 
-          {/* Right: Login Button or User Avatar */}
+          {/* Login or User Menu */}
           <Box sx={{ display: "flex", gap: 2 }}>
-            {user ? (
-              <Avatar
-                sx={{ width: 56, height: 56, cursor: "pointer" }}
-                alt={user.name}
-                src={user.profilePicture}
-                onClick={handleAvatarClick}
-              />
+            {isLoggedIn ? (
+              <>
+                <Avatar
+                  sx={{ width: 56, height: 56, cursor: "pointer" }}
+                  alt={user?.name}
+                  src={user?.profilePicture}
+                  onClick={toggleDropdown} // Toggle dropdown visibility
+                />
+                {dropdownOpen && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "80px", // Below the avatar
+                      right: 0,
+                      backgroundColor: "white",
+                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                      zIndex: 10,
+                      padding: "10px",
+                      width: "80px",
+                    }}
+                  >
+                    <Typography
+                      onClick={handleLogout}
+                      sx={{
+                        color: "black",
+                        cursor: "pointer",
+                        fontSize: "16px",
+                      }}
+                    >
+                      Logout
+                    </Typography>
+                  </Box>
+                )}
+              </>
             ) : (
               <Button
                 variant="outlined"
@@ -199,9 +183,9 @@ const Navbar = () => {
                   opacity: 0.8,
                   border: "none",
                   borderRadius: "50px",
-                  whiteSpace: "nowrap", // Prevent text wrapping
-                  minWidth: "100px", // Set a fixed minimum width
-                  flexShrink: 0, // Prevent the button from shrinking
+                  whiteSpace: "nowrap",
+                  minWidth: "100px",
+                  flexShrink: 0,
                   "&:hover": {
                     backgroundColor: "#39B75D",
                     opacity: 1,
@@ -220,7 +204,7 @@ const Navbar = () => {
       <LoginModal
         open={openLoginModal}
         handleClose={handleCloseLoginModal}
-        onLogin={handleUserLogin} // Pass the function to LoginModal
+        onLogin={handleLogin}
       />
     </AppBar>
   );

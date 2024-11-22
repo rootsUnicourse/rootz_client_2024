@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Typography, Grid, Card, CardContent, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Avatar, Box, Typography, Grid, Card, CardContent, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
 
     // Demo data for balance and transactions
     const demoBalance = {
@@ -24,6 +26,7 @@ const ProfilePage = () => {
             setUser(JSON.parse(storedUser));
         }
     }, []);
+
 
     // If user data is not available, show a loading or fallback message
     if (!user) {

@@ -40,9 +40,8 @@ const PasswordReset = () => {
         message: response.data.message || "Password has been updated successfully.",
         severity: 'success',
       });
-      // Optionally, redirect to login page after a delay
       setTimeout(() => {
-        navigate('/'); // Use navigate instead of history.push
+        navigate('/');
       }, 3000);
     } catch (error) {
       console.error("Password Reset Error:", error.response?.data?.message || error.message);

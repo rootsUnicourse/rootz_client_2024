@@ -15,7 +15,7 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import Grid2 from '@mui/material/Grid'; // Adjust import if necessary
+import Grid2 from '@mui/material/Grid';
 import {
   fetchWallet,
   fetchTransactions,
@@ -99,63 +99,8 @@ const ProfilePage = () => {
         </Box>
       </Box>
 
-      {/* Invite Link Section */}
-      <Box
-        sx={{
-          marginBottom: '20px',
-          padding: '20px',
-          backgroundColor: '#e0f7fa',
-          borderRadius: '10px',
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 'bold', marginBottom: '10px' }}
-        >
-          Invite Friends
-        </Typography>
-        <Typography variant="body1" sx={{ marginBottom: '10px' }}>
-          Share this link to invite others to join under you:
-        </Typography>
-        <TextField
-          fullWidth
-          variant="outlined"
-          value={inviteLink}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ marginTop: '10px' }}
-          onClick={() => navigator.clipboard.writeText(inviteLink)}
-        >
-          Copy Invite Link
-        </Button>
-      </Box>
-
-      {/* Family Tree Section */}
-      <Box
-        sx={{
-          marginBottom: '20px',
-          padding: '20px',
-          backgroundColor: '#fff3e0',
-          borderRadius: '10px',
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 'bold', marginBottom: '10px' }}
-        >
-          Your Family Tree
-        </Typography>
-        {/* Render the Family Tree Component */}
-        <FamilyTree userData={userData} />
-      </Box>
-
       {/* Balance Overview Section */}
-      <Grid2 container spacing={1}>
+      <Grid2 container spacing={1} sx={{ marginBottom: '20px' }}>
         <Grid2 item xs={12} md={3}>
           <Card>
             <CardContent
@@ -238,13 +183,69 @@ const ProfilePage = () => {
               >
                 Cash Withdrawn
               </Typography>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}
+              >
                 ${wallet.cashWithdrawn.toFixed(2)}
               </Typography>
             </CardContent>
           </Card>
         </Grid2>
       </Grid2>
+
+      {/* Invite Link Section */}
+      <Box
+        sx={{
+          marginBottom: '20px',
+          padding: '20px',
+          backgroundColor: '#e0f7fa',
+          borderRadius: '10px',
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 'bold', marginBottom: '10px' }}
+        >
+          Invite Friends
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: '10px' }}>
+          Share this link to invite others to join under you:
+        </Typography>
+        <TextField
+          fullWidth
+          variant="outlined"
+          value={inviteLink}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ marginTop: '10px' }}
+          onClick={() => navigator.clipboard.writeText(inviteLink)}
+        >
+          Copy Invite Link
+        </Button>
+      </Box>
+
+      {/* Family Tree Section */}
+      <Box
+        sx={{
+          marginBottom: '20px',
+          padding: '20px',
+          backgroundColor: '#fff3e0',
+          borderRadius: '10px',
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 'bold', marginBottom: '10px' }}
+        >
+          Your Family Tree
+        </Typography>
+        {/* Render the Family Tree Component */}
+        <FamilyTree userData={userData} />
+      </Box>
 
       {/* Transaction History Section */}
       <Box sx={{ marginTop: '30px' }}>

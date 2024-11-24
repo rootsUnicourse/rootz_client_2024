@@ -10,8 +10,9 @@ import FavoriteShops from './components/FavoriteShops/FavoriteShops';
 import { AuthProvider } from './AuthContext'; // Import AuthProvider
 
 function App() {
+
     return (
-        <GoogleOAuthProvider clientId="134952626250-qkihmg8l7fi5diniog9j2qnkf6nrvbsh.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
             <AuthProvider> {/* Wrap the entire app with AuthProvider */}
                 <Router>
                     {/* Layout wraps all routes */}

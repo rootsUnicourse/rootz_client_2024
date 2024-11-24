@@ -27,3 +27,11 @@ export const googleLogin = (tokenId) => API.post('/auth/google-login', { tokenId
 // User-related API calls
 export const requestPasswordReset = (email) => API.post('/users/request-password-reset', { email });
 export const submitNewPassword = (token, newPassword) => API.post('/users/submit-new-password', { token, newPassword });
+
+// Wallet-related API calls
+export const fetchWallet = () => API.get("/wallet");
+export const updateWallet = (walletData) => API.put("/wallet", walletData);
+
+// Transactions-related API calls
+export const fetchTransactions = () => API.get("/wallet/transactions");
+export const addTransaction = (transactionData) => API.post("/wallet/transactions", transactionData);

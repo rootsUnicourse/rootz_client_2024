@@ -50,7 +50,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
     return (
         <Card
             sx={{
-                width: 264, // Card width
+                width: 275, // Card width
                 height: cardHeight, // Fixed card height
                 position: 'relative',
                 overflow: 'hidden',

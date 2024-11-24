@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Typography, Grid, Card, CardContent, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Avatar, Box, Typography, Card, CardContent, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import Grid2 from "@mui/material/Grid2";
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
@@ -65,8 +66,8 @@ const ProfilePage = () => {
             </Box>
 
             {/* Balance Overview Section */}
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
+            <Grid2 container spacing={2}>
+                <Grid2 xs={12} md={4} >
                     <Card>
                         <CardContent>
                             <Typography variant="h6" sx={{ color: '#4caf50', fontWeight: 'bold' }}>
@@ -77,8 +78,8 @@ const ProfilePage = () => {
                             </Typography>
                         </CardContent>
                     </Card>
-                </Grid>
-                <Grid item xs={12} md={4}>
+                </Grid2>
+                <Grid2 item xs={12} md={4}>
                     <Card>
                         <CardContent>
                             <Typography variant="h6" sx={{ color: '#2196f3', fontWeight: 'bold' }}>
@@ -89,8 +90,8 @@ const ProfilePage = () => {
                             </Typography>
                         </CardContent>
                     </Card>
-                </Grid>
-                <Grid item xs={12} md={4}>
+                </Grid2>
+                <Grid2 item xs={12} md={4}>
                     <Card>
                         <CardContent>
                             <Typography variant="h6" sx={{ color: '#ff9800', fontWeight: 'bold' }}>
@@ -101,8 +102,8 @@ const ProfilePage = () => {
                             </Typography>
                         </CardContent>
                     </Card>
-                </Grid>
-            </Grid>
+                </Grid2>
+            </Grid2>
 
             {/* Transaction History Section */}
             <Box sx={{ marginTop: '30px' }}>

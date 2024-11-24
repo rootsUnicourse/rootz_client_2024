@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
             {isLoggedIn && <SubNavbar />}
             <main
                 style={{
-                    marginTop: "20px",
+                    marginTop: "50px",
                 }}
             >
                 {children}

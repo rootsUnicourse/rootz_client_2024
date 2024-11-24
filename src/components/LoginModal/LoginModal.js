@@ -1,4 +1,3 @@
-// src/components/LoginModal.js
 import React, { useState, useEffect } from "react";
 import {
   Dialog,
@@ -16,7 +15,7 @@ import {
   Link,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { GoogleLogin } from "@react-oauth/google"; // Original GoogleLogin import
+import { GoogleLogin } from "@react-oauth/google";
 import {
   register,
   login,
@@ -24,6 +23,7 @@ import {
   googleLogin,
   requestPasswordReset,
 } from "../../API/index";
+import { useLocation } from "react-router-dom"; // Import useLocation
 
 const LoginModal = ({ open, handleClose, onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -34,6 +34,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
     password: "",
     confirmPassword: "",
     verificationCode: "",
+    parentId: null,
   });
   const [showVerification, setShowVerification] = useState(false);
   const [snackbar, setSnackbar] = useState({
@@ -43,6 +44,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [termsAgreed, setTermsAgreed] = useState(false);
+
+  const location = useLocation(); // Get the current location
 
   useEffect(() => {
     if (!open) {
@@ -57,10 +60,18 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         password: "",
         confirmPassword: "",
         verificationCode: "",
+        parentId: null,
       });
       setFieldErrors({});
+    } else {
+      // Extract parentId from URL when modal opens
+      const params = new URLSearchParams(location.search);
+      const parentId = params.get("parentId");
+      if (parentId) {
+        setFormData((prevData) => ({ ...prevData, parentId }));
+      }
     }
-  }, [open]);
+  }, [open, location.search]);
 
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -93,6 +104,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          parentId: formData.parentId, // Include parentId
         });
         setSnackbar({
           open: true,
@@ -204,7 +216,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
   const responseMessage = async (response) => {
     try {
       const tokenId = response.credential;
-      const result = await googleLogin(tokenId);
+      const result = await googleLogin(tokenId, formData.parentId); // Pass parentId
       localStorage.setItem("userToken", result.data.token);
       localStorage.setItem("userInfo", JSON.stringify(result.data.user));
       onLogin(result.data.user); // Update context with user info
@@ -218,7 +230,6 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       });
     }
   };
-
 
   const errorMessage = (error) => {
     console.log(error);
@@ -243,8 +254,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
           {isSignUp
             ? "Sign Up"
             : isForgotPassword
-              ? "Forgot Password"
-              : "Log In"}
+            ? "Forgot Password"
+            : "Log In"}
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -561,7 +572,13 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     <span>or</span>
                   </Box>
                   {/* Google Login Button */}
-                  <Box sx={{ position: "relative", display: "inline-block", width: "100%" }}>
+                  <Box
+                    sx={{
+                      position: "relative",
+                      display: "inline-block",
+                      width: "100%",
+                    }}
+                  >
                     <GoogleLogin
                       onSuccess={responseMessage}
                       onError={errorMessage}
@@ -581,7 +598,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                         onClick={() => {
                           setSnackbar({
                             open: true,
-                            message: "You must agree to the Terms and Conditions.",
+                            message:
+                              "You must agree to the Terms and Conditions.",
                             severity: "error",
                           });
                         }}

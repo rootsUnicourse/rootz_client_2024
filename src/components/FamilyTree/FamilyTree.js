@@ -4,6 +4,17 @@ import React from 'react';
 import { Tree, TreeNode } from 'react-organizational-chart';
 import { Avatar, Typography, Box } from '@mui/material';
 
+// Helper function to format Decimal128 amounts
+const formatAmount = (amount) => {
+  if (amount && amount.$numberDecimal) {
+    return parseFloat(amount.$numberDecimal).toFixed(2);
+  } else if (typeof amount === 'number') {
+    return amount.toFixed(2);
+  } else {
+    return '0.00';
+  }
+};
+
 // Recursive component to render each node
 const TreeNodeComponent = ({ user }) => {
   return (
@@ -27,13 +38,21 @@ const TreeNodeComponent = ({ user }) => {
             alt={user.name}
             sx={{ width: 60, height: 60, marginBottom: '10px' }}
           />
-          <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+          <Typography
+            variant="body1"
+            sx={{ fontWeight: 'bold', textAlign: 'center' }}
+          >
             {user.name}
           </Typography>
-          {/* Remove email if not needed or keep it */}
-          {/* <Typography variant="body2" sx={{ color: '#777', textAlign: 'center' }}>
-            {user.email}
-          </Typography> */}
+          {/* Display amount earned from this user if available */}
+          {user.amountEarnedFromChild && (
+            <Typography
+              variant="body2"
+              sx={{ color: '#4caf50', textAlign: 'center' }}
+            >
+              Earned: ${formatAmount(user.amountEarnedFromChild)}
+            </Typography>
+          )}
         </Box>
       }
     >
@@ -71,13 +90,12 @@ const FamilyTree = ({ userData }) => {
               alt={userData.name}
               sx={{ width: 60, height: 60, marginBottom: '10px' }}
             />
-            <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+            <Typography
+              variant="body1"
+              sx={{ fontWeight: 'bold', textAlign: 'center' }}
+            >
               {userData.name}
             </Typography>
-            {/* Remove email if not needed or keep it */}
-            {/* <Typography variant="body2" sx={{ color: '#777', textAlign: 'center' }}>
-              {userData.email}
-            </Typography> */}
           </Box>
         }
       >

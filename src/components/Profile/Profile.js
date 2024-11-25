@@ -293,46 +293,54 @@ const ProfilePage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {transactions.map((transaction, index) => (
-              <TableRow
-                key={index}
-                sx={{
-                  '&:nth-of-type(odd)': {
-                    backgroundColor: '#f9f9f9',
-                  },
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
-                  },
-                }}
-              >
-                <TableCell>
-                  {new Date(transaction.date).toLocaleDateString()}
-                </TableCell>
-                <TableCell>{transaction.description}</TableCell>
-                <TableCell
+            {transactions.length > 0 ? (
+              transactions.map((transaction, index) => (
+                <TableRow
+                  key={index}
                   sx={{
-                    color:
-                      parseFloat(transaction.amount?.$numberDecimal) >= 0
-                        ? '#4caf50'
-                        : '#f44336',
-                    fontWeight: 'bold',
+                    '&:nth-of-type(odd)': {
+                      backgroundColor: '#f9f9f9',
+                    },
+                    '&:hover': {
+                      backgroundColor: '#f0f0f0',
+                    },
                   }}
                 >
-                  ${formatAmount(transaction.amount)}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color:
-                      transaction.status === 'Completed'
-                        ? '#4caf50'
-                        : '#ff9800',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {transaction.status}
+                  <TableCell>
+                    {new Date(transaction.date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>{transaction.description}</TableCell>
+                  <TableCell
+                    sx={{
+                      color:
+                        parseFloat(transaction.amount?.$numberDecimal) >= 0
+                          ? '#4caf50'
+                          : '#f44336',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    ${formatAmount(transaction.amount)}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color:
+                        transaction.status === 'Completed'
+                          ? '#4caf50'
+                          : '#ff9800',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {transaction.status}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  No Transactions yet
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </Box>

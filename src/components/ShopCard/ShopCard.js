@@ -9,7 +9,8 @@ import {
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { likeShop } from '../../API/index'; // Updated function name
+import { likeShop, simulatePurchase } from '../../API/index';
+import { useAuth } from "../../AuthContext"; // Import AuthContext
 
 const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -17,6 +18,8 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
     const [isLiked, setIsLiked] = useState(initialIsLiked); // Track liked state
     const descriptionRef = useRef(null);
     const [descriptionHeight, setDescriptionHeight] = useState(0);
+
+    const { isLoggedIn } = useAuth(); // Access authentication state
 
     // Sync isLiked state with initialIsLiked prop
     useEffect(() => {
@@ -30,12 +33,34 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
     }, [shop.description]);
 
     const handleLike = async () => {
+        if (!isLoggedIn) {
+            alert('Please log in to like a shop.');
+            return;
+        }
+
         try {
             await likeShop(shop._id);
             setIsLiked((prev) => !prev); // Toggle state locally
             if (toggleLike) toggleLike(shop._id); // Notify parent if needed
         } catch (error) {
             console.error('Error liking/unliking shop:', error.message);
+        }
+    };
+
+    const handlePurchase = async () => {
+        if (!isLoggedIn) {
+            alert('Please log in to make a purchase.');
+            return;
+        }
+
+        try {
+            // Call the simulatePurchase function
+            await simulatePurchase(shop._id);
+            // Redirect to the shop's site only if simulation succeeds
+            window.open(shop.siteUrl, '_blank');
+        } catch (error) {
+            console.error('Error simulating purchase:', error.message);
+            alert('An error occurred while processing your purchase. Please try again later.');
         }
     };
 
@@ -215,7 +240,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
                             color: 'white',
                         },
                     }}
-                    onClick={() => window.open(shop.siteUrl, '_blank')}
+                    onClick={handlePurchase}
                 >
                     Shop on Site
                 </Button>

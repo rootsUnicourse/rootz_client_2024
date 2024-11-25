@@ -15,7 +15,7 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import Grid2 from '@mui/material/Grid';
+import Grid2 from "@mui/material/Grid2";
 import {
   fetchWallet,
   fetchTransactions,
@@ -27,6 +27,15 @@ const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const [wallet, setWallet] = useState(null);
   const [transactions, setTransactions] = useState([]);
+
+  // Helper function to format Decimal128 amounts
+  const formatAmount = (amount) => {
+    if (amount && amount.$numberDecimal) {
+      return parseFloat(amount.$numberDecimal).toFixed(2);
+    } else {
+      return '0.00';
+    }
+  };
 
   // Fetch user profile, wallet, and transaction data
   useEffect(() => {
@@ -118,7 +127,7 @@ const ProfilePage = () => {
                 Money Earned
               </Typography>
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                ${wallet.moneyEarned.toFixed(2)}
+                ${formatAmount(wallet.moneyEarned)}
               </Typography>
             </CardContent>
           </Card>
@@ -140,7 +149,7 @@ const ProfilePage = () => {
                 Money Waiting
               </Typography>
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                ${wallet.moneyWaiting.toFixed(2)}
+                ${formatAmount(wallet.moneyWaiting)}
               </Typography>
             </CardContent>
           </Card>
@@ -162,7 +171,7 @@ const ProfilePage = () => {
                 Money Approved
               </Typography>
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                ${wallet.moneyApproved.toFixed(2)}
+                ${formatAmount(wallet.moneyApproved)}
               </Typography>
             </CardContent>
           </Card>
@@ -183,9 +192,8 @@ const ProfilePage = () => {
               >
                 Cash Withdrawn
               </Typography>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}
-              >
-                ${wallet.cashWithdrawn.toFixed(2)}
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                ${formatAmount(wallet.cashWithdrawn)}
               </Typography>
             </CardContent>
           </Card>
@@ -303,11 +311,14 @@ const ProfilePage = () => {
                 <TableCell>{transaction.description}</TableCell>
                 <TableCell
                   sx={{
-                    color: transaction.amount >= 0 ? '#4caf50' : '#f44336',
+                    color:
+                      parseFloat(transaction.amount?.$numberDecimal) >= 0
+                        ? '#4caf50'
+                        : '#f44336',
                     fontWeight: 'bold',
                   }}
                 >
-                  ${transaction.amount.toFixed(2)}
+                  ${formatAmount(transaction.amount)}
                 </TableCell>
                 <TableCell
                   sx={{

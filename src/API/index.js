@@ -38,3 +38,6 @@ export const addTransaction = (transactionData) => API.post("/wallet/transaction
 
 // Fetch user profile with family tree
 export const fetchUserProfile = () => API.get('/users/profile');
+
+// **Add the simulatePurchase function here**
+export const simulatePurchase = (shopId) => API.post('/wallet/purchase', { shopId });

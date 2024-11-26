@@ -1,3 +1,5 @@
+// src/components/Navbar/Navbar.js
+
 import React, { useState, useEffect } from "react";
 import {
   AppBar,
@@ -13,17 +15,18 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../AuthContext"; // Import the Auth context
+import { useAuth } from "../../AuthContext";
+import { useLoginModal } from '../../LoginModalContext'; // Import useLoginModal
 import logo from "../../Assets/Images/Rootz_logo.png";
 import LoginModal from "../LoginModal/LoginModal";
 import { fetchShopsBySearch } from "../../API/index";
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
 
 const Navbar = () => {
-  const { isLoggedIn, login, logout } = useAuth(); // Use AuthContext
+  const { isLoggedIn, login, logout } = useAuth();
+  const { openLoginModal, handleOpenLoginModal, handleCloseLoginModal } = useLoginModal(); // Use LoginModalContext
   const [user, setUser] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [openLoginModal, setOpenLoginModal] = useState(false);
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -59,15 +62,6 @@ const Navbar = () => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput]);
-
-
-  const handleOpenLoginModal = () => {
-    setOpenLoginModal(true);
-  };
-
-  const handleCloseLoginModal = () => {
-    setOpenLoginModal(false);
-  };
 
   const handleLogin = (userInfo) => {
     login(userInfo); // Update context
@@ -252,7 +246,7 @@ const Navbar = () => {
                     opacity: 1,
                   },
                 }}
-                onClick={handleOpenLoginModal}
+                onClick={handleOpenLoginModal} // Open login modal
               >
                 Log In
               </Button>

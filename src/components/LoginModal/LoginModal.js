@@ -250,7 +250,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle id="login-dialog-title" sx={{ m: 0, p: 2 }}>
+        <DialogTitle id="login-dialog-title" sx={{ color:'white',m: 0, p: 2, backgroundColor:'#1DC14C',opacity: 0.7 }}>
           {isSignUp
             ? "Sign Up"
             : isForgotPassword
@@ -263,7 +263,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
               position: "absolute",
               right: 8,
               top: 8,
-              color: (theme) => theme.palette.grey[500],
+              color: 'white',
             }}
           >
             <CloseIcon />

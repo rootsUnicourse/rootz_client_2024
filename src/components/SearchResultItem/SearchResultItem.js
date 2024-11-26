@@ -1,7 +1,12 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import { useAuth } from "../../AuthContext"; // Import useAuth
+import { useLoginModal } from "../../LoginModalContext"; // Import useLoginModal
 
 const SearchResultItem = ({ shop }) => {
+  const { isLoggedIn } = useAuth(); // Access authentication state
+  const { handleOpenLoginModal } = useLoginModal(); // Access modal controls
+
   return (
     <Box
       sx={{
@@ -14,8 +19,11 @@ const SearchResultItem = ({ shop }) => {
         textAlign: "center",
       }}
       onClick={() => {
-        // Handle click event, e.g., navigate to shop page
-        window.open(shop.siteUrl, "_blank"); // Open shop site in a new tab
+        if (!isLoggedIn) {
+          handleOpenLoginModal(); // Open login modal
+        } else {
+          window.open(shop.siteUrl, "_blank"); // Open shop site in a new tab
+        }
       }}
     >
       {/* Shop Logo */}

@@ -14,9 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
-import { useLoginModal } from '../../LoginModalContext'; // Import useLoginModal
+import { useLoginModal } from '../../LoginModalContext';
 import logo from "../../Assets/Images/Rootz_logo.png";
 import LoginModal from "../LoginModal/LoginModal";
 import { fetchShopsBySearch } from "../../API/index";
@@ -24,12 +24,14 @@ import SearchResultItem from "../SearchResultItem/SearchResultItem";
 
 const Navbar = () => {
   const { isLoggedIn, login, logout } = useAuth();
-  const { openLoginModal, handleOpenLoginModal, handleCloseLoginModal } = useLoginModal(); // Use LoginModalContext
+  const { openLoginModal, handleOpenLoginModal, handleCloseLoginModal } = useLoginModal();
   const [user, setUser] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   // Fetch user data from localStorage when isLoggedIn changes
   useEffect(() => {
@@ -62,6 +64,18 @@ const Navbar = () => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput]);
+
+  // Detect parentId in URL and update showLoginPrompt
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const parentId = params.get("parentId");
+
+    if (parentId && !isLoggedIn) {
+      setShowLoginPrompt(true);
+    } else {
+      setShowLoginPrompt(false);
+    }
+  }, [location.search, isLoggedIn]);
 
   const handleLogin = (userInfo) => {
     login(userInfo); // Update context
@@ -230,26 +244,75 @@ const Navbar = () => {
                 )}
               </>
             ) : (
-              <Button
-                variant="outlined"
-                sx={{
-                  color: "white",
-                  backgroundColor: "#39B75D",
-                  opacity: 0.8,
-                  border: "none",
-                  borderRadius: "50px",
-                  whiteSpace: "nowrap",
-                  minWidth: "100px",
-                  flexShrink: 0,
-                  "&:hover": {
+              <Box sx={{ position: "relative", display: "flex", alignItems: "center" }}>
+                {/* Glowing Log In Button */}
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "white",
                     backgroundColor: "#39B75D",
-                    opacity: 1,
-                  },
-                }}
-                onClick={handleOpenLoginModal} // Open login modal
-              >
-                Log In
-              </Button>
+                    opacity: 0.8,
+                    border: "none",
+                    borderRadius: "50px",
+                    whiteSpace: "nowrap",
+                    minWidth: "100px",
+                    flexShrink: 0,
+                    animation: showLoginPrompt
+                      ? "glow 1.5s ease-in-out infinite"
+                      : "none",
+                    "@keyframes glow": {
+                      "0%": {
+                        boxShadow: "0 0 5px #39B75D",
+                      },
+                      "50%": {
+                        boxShadow: "0 0 20px #39B75D",
+                      },
+                      "100%": {
+                        boxShadow: "0 0 5px #39B75D",
+                      },
+                    },
+                    "&:hover": {
+                      backgroundColor: "#39B75D",
+                      opacity: 1,
+                    },
+                  }}
+                  onClick={() => {
+                    handleOpenLoginModal();
+                    setShowLoginPrompt(false); // Hide prompt when modal opens
+                  }}
+                >
+                  Log In
+                </Button>
+
+                {/* Speech Bubble */}
+                {showLoginPrompt && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "calc(100% + 10px)", // Positioned below the button
+                      right: "-10px",
+                      backgroundColor: "#fff",
+                      padding: "10px",
+                      borderRadius: "10px",
+                      boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+                      "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: "-10px", // Arrow points upwards
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        borderWidth: "10px",
+                        borderStyle: "solid",
+                        borderColor: "transparent transparent #fff transparent",
+                      },
+                    }}
+                  >
+                    <Typography  sx={{ color:"black",fontWeight: "bold",fontSize:"12px" }}>
+                      Log in to make money!💲
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
             )}
           </Box>
         </Toolbar>

@@ -24,6 +24,8 @@ import {
   requestPasswordReset,
 } from "../../API/index";
 import { useLocation } from "react-router-dom"; // Import useLocation
+import { Buffer } from 'buffer';
+
 
 const LoginModal = ({ open, handleClose, onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -66,9 +68,19 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
     } else {
       // Extract parentId from URL when modal opens
       const params = new URLSearchParams(location.search);
-      const parentId = params.get("parentId");
-      if (parentId) {
-        setFormData((prevData) => ({ ...prevData, parentId }));
+      const encodedParentId = params.get("parentId");
+      if (encodedParentId) {
+        // Decode the parentId based on the encoding used
+        //const decodedParentId = decodeURIComponent(encodedParentId);
+        // For encodeURIComponent encoding
+        // OR, if using Base64:
+        const decodedParentId = Buffer.from(encodedParentId, 'base64').toString('utf-8');
+        console.log(decodedParentId)
+
+        setFormData((prevData) => ({
+          ...prevData,
+          parentId: decodedParentId,
+        }));
       }
     }
   }, [open, location.search]);
@@ -250,12 +262,12 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle id="login-dialog-title" sx={{ color:'white',m: 0, p: 2, backgroundColor:'#1DC14C',opacity: 0.7 }}>
+        <DialogTitle id="login-dialog-title" sx={{ color: 'white', m: 0, p: 2, backgroundColor: '#1DC14C', opacity: 0.7 }}>
           {isSignUp
             ? "Sign Up"
             : isForgotPassword
-            ? "Forgot Password"
-            : "Log In"}
+              ? "Forgot Password"
+              : "Log In"}
           <IconButton
             aria-label="close"
             onClick={handleClose}

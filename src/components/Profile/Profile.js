@@ -22,6 +22,7 @@ import {
   fetchUserProfile,
 } from '../../API'; // Import API calls
 import FamilyTree from '../FamilyTree/FamilyTree'; // Import the updated component
+import { Buffer } from 'buffer';
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
@@ -76,8 +77,10 @@ const ProfilePage = () => {
     );
   }
 
-  // Generate invite link
-  const inviteLink = `${window.location.origin}?parentId=${userData._id}`;
+  // Encode the `user_id` using Base64
+  const encodedUserId = Buffer.from(userData._id).toString('base64');
+  const inviteLink = `${window.location.origin}?parentId=${encodedUserId}`;
+
 
   return (
     <Box sx={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>

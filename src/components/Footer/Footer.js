@@ -1,6 +1,6 @@
 // src/components/Footer/Footer.jsx
 import React from "react";
-import { Box, Container, Typography, Link, IconButton } from "@mui/material";
+import { Box, Container, Typography,Grid,Link, IconButton } from "@mui/material";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -17,19 +17,20 @@ const Footer = () => {
             }}
         >
             <Container maxWidth="lg">
-                <Grid2 container spacing={4}>
+                <Grid container spacing={4}>
                     {/* About Us */}
-                    <Grid2 item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Typography variant="h6" gutterBottom>
                             About Us
                         </Typography>
                         <Typography variant="body2">
-                            We are committed to providing the best cashback deals to our users.
+                            We are committed to providing the 
+                            best cashback deals to our users.
                         </Typography>
-                    </Grid2>
+                    </Grid>
 
                     {/* Quick Links */}
-                    <Grid2 item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Typography variant="h6" gutterBottom>
                             Quick Links
                         </Typography>
@@ -55,10 +56,10 @@ const Footer = () => {
                                 </Link>
                             </li>
                         </Box>
-                    </Grid2>
+                    </Grid>
 
                     {/* Support */}
-                    <Grid2 item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Typography variant="h6" gutterBottom>
                             Support
                         </Typography>
@@ -79,10 +80,10 @@ const Footer = () => {
                                 </Link>
                             </li>
                         </Box>
-                    </Grid2>
+                    </Grid>
 
                     {/* Follow Us */}
-                    <Grid2 item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Typography variant="h6" gutterBottom>
                             Follow Us
                         </Typography>
@@ -115,8 +116,8 @@ const Footer = () => {
                                 <InstagramIcon />
                             </IconButton>
                         </Box>
-                    </Grid2>
-                </Grid2>
+                    </Grid>
+                </Grid>
 
                 {/* Footer Bottom */}
                 <Box mt={4} textAlign="center">

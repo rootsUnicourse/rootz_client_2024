@@ -81,7 +81,8 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
         height: cardHeight, // Fixed card height
         position: 'relative',
         overflow: 'hidden',
-        boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
+        boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
+        borderRadius: '8px',
         transition: 'transform 0.3s, box-shadow 0.3s',
         '&:hover': {
           boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
@@ -128,33 +129,19 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
       </IconButton>
 
       {/* Background Image */}
-      <CardMedia
-        component="img"
-        image={shop.image || 'https://via.placeholder.com/250x100'}
-        alt={shop.title}
-        sx={{
-          width: '100%',
-          height: '40%',
-          objectFit: 'contain',
-          backgroundColor: '#009688',
-          transition: 'opacity 0.3s',
-          opacity: isHovered ? 0.7 : 1,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-      />
+
 
       {/* Expanding Content */}
       <Box
         sx={{
           position: 'absolute',
-          bottom: 0, // Ensures expanding content stays above the button
+          bottom: 50, // Ensures expanding content stays above the button
           width: '100%',
           height: `${bottomSectionHeight}px`,
           backgroundColor: '#fff',
           zIndex: 3,
           transition: 'height 0.3s ease-in-out',
+
         }}
       >
         <Box sx={{ boxSizing: 'border-box' }}>
@@ -165,8 +152,8 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
               alt={shop.title}
               style={{
                 border: '3px solid #fff',
-                width: '120px',
-                height: '40px',
+                width: '190px',
+                height: '60px',
                 objectFit: 'cover',
               }}
             />
@@ -174,7 +161,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
 
           {/* Shop Name */}
           <Typography
-            sx={{ textAlign: 'center', fontSize: '15px', color: '#4f4f4f' }}
+            sx={{ textAlign: 'center', fontSize: '16px', color: '#4f4f4f' }}
           >
             {shop.title}
           </Typography>
@@ -186,7 +173,8 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
               color: '#4CAF50',
               fontWeight: 700,
               textAlign: 'center',
-              marginBottom: '8px', // Reduced spacing between cashback and button
+              marginBottom: '8px',
+              fontSize: '18px' // Reduced spacing between cashback and button
             }}
           >
             {shop.discount ? `${shop.discount} Cashback` : 'No Discount'}

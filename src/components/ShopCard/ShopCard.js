@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Card,
-  CardMedia,
   Typography,
   Box,
   IconButton,

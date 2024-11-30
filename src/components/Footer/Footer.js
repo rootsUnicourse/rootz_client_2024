@@ -4,7 +4,6 @@ import { Box, Container, Typography,Grid,Link, IconButton } from "@mui/material"
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import Grid2 from "@mui/material/Grid2";
 
 const Footer = () => {
     return (

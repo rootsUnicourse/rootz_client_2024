@@ -15,12 +15,13 @@ import {
   TextField,
   Button,
   Snackbar,
-  Alert
+  Alert,
+  Pagination
 } from '@mui/material';
 import Grid2 from "@mui/material/Grid2";
 import {
   fetchWallet,
-  fetchTransactions,
+  fetchTransactionsByPage,
   fetchUserProfile,
 } from '../../API'; // Import API calls
 import FamilyTree from '../FamilyTree/FamilyTree'; // Import the updated component
@@ -34,8 +35,10 @@ const ProfilePage = () => {
   const [transactions, setTransactions] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const boxRef = useRef(null);
-
+  const rowsPerPage = 10;
   // Helper function to format Decimal128 amounts
   const formatAmount = (amount) => {
     if (amount && amount.$numberDecimal) {
@@ -57,9 +60,6 @@ const ProfilePage = () => {
         const walletResponse = await fetchWallet();
         setWallet(walletResponse.data);
 
-        // Fetch transactions
-        const transactionsResponse = await fetchTransactions();
-        setTransactions(transactionsResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -68,6 +68,20 @@ const ProfilePage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchPaginatedTransactions = async () => {
+      try {
+        const response = await fetchTransactionsByPage(currentPage, rowsPerPage);
+        setTransactions(response.data.transactions);
+        setTotalPages(response.data.pages);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+
+    fetchPaginatedTransactions();
+  }, [currentPage]);
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(inviteLink);
     setSnackbarOpen(true); // Open the Snackbar
@@ -75,6 +89,10 @@ const ProfilePage = () => {
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false); // Close the Snackbar
+  };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
 
@@ -358,23 +376,11 @@ const ProfilePage = () => {
           }}
         >
           <TableHead>
-            <TableRow
-              sx={{
-                backgroundColor: '#39B75D', // Custom header background color
-              }}
-            >
-              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>
-                Date
-              </TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>
-                Description
-              </TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>
-                Amount
-              </TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>
-                Status
-              </TableCell>
+            <TableRow sx={{ backgroundColor: '#39B75D' }}>
+              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Date</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Description</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Amount</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -383,17 +389,11 @@ const ProfilePage = () => {
                 <TableRow
                   key={index}
                   sx={{
-                    '&:nth-of-type(odd)': {
-                      backgroundColor: '#f9f9f9',
-                    },
-                    '&:hover': {
-                      backgroundColor: '#f0f0f0',
-                    },
+                    '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' },
+                    '&:hover': { backgroundColor: '#f0f0f0' },
                   }}
                 >
-                  <TableCell>
-                    {new Date(transaction.date).toLocaleDateString()}
-                  </TableCell>
+                  <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
                   <TableCell>{transaction.description}</TableCell>
                   <TableCell
                     sx={{
@@ -428,6 +428,12 @@ const ProfilePage = () => {
             )}
           </TableBody>
         </Table>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          sx={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}
+        />
       </Box>
     </Box>
   );

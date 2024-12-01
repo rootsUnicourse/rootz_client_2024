@@ -34,6 +34,7 @@ export const updateWallet = (walletData) => API.put("/wallet", walletData);
 
 // Transactions-related API calls
 export const fetchTransactions = () => API.get("/wallet/transactions");
+export const fetchTransactionsByPage = (page = 1, limit = 10) => API.get('/wallet/transactions-by-page', { params: { page, limit } });
 export const addTransaction = (transactionData) => API.post("/wallet/transactions", transactionData);
 
 // Fetch user profile with family tree

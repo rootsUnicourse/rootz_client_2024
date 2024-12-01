@@ -1,6 +1,6 @@
 // src/components/ProfilePage.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Avatar,
   Box,
@@ -14,6 +14,8 @@ import {
   TableRow,
   TextField,
   Button,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import Grid2 from "@mui/material/Grid2";
 import {
@@ -23,11 +25,16 @@ import {
 } from '../../API'; // Import API calls
 import FamilyTree from '../FamilyTree/FamilyTree'; // Import the updated component
 import { Buffer } from 'buffer';
+import Confetti from 'react-confetti';
+
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const [wallet, setWallet] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [isHovered, setIsHovered] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const boxRef = useRef(null);
 
   // Helper function to format Decimal128 amounts
   const formatAmount = (amount) => {
@@ -60,6 +67,16 @@ const ProfilePage = () => {
 
     fetchData();
   }, []);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(inviteLink);
+    setSnackbarOpen(true); // Open the Snackbar
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false); // Close the Snackbar
+  };
+
 
   // Fallback message while data is loading
   if (!userData || !wallet) {
@@ -205,21 +222,58 @@ const ProfilePage = () => {
 
       {/* Invite Link Section */}
       <Box
+        ref={boxRef}
         sx={{
           marginBottom: '20px',
           padding: '20px',
-          backgroundColor: '#e0f7fa',
-          borderRadius: '10px',
+          background: 'linear-gradient(45deg, #ff9800, #ff5722)',
+          borderRadius: '15px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+          transition: 'transform 0.3s, box-shadow 0.3s',
+          position: 'relative',
+          '&:hover': {
+            transform: 'scale(1.05)',
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)',
+          },
+          overflow: 'hidden',
         }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
+        {isHovered && boxRef.current && (
+          <Confetti
+            width={boxRef.current.offsetWidth}
+            height={boxRef.current.offsetHeight}
+            numberOfPieces={200}
+            recycle={false}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              pointerEvents: 'none',
+            }}
+          />
+        )}
         <Typography
-          variant="h6"
-          sx={{ fontWeight: 'bold', marginBottom: '10px' }}
+          variant="h5"
+          sx={{
+            fontWeight: 'bold',
+            color: '#ffffff',
+            marginBottom: '10px',
+            textAlign: 'center',
+          }}
         >
-          Invite Friends
+          💸 Invite Friends & Earn Cashback!
         </Typography>
-        <Typography variant="body1" sx={{ marginBottom: '10px' }}>
-          Share this link to invite others to join under you:
+        <Typography
+          variant="body1"
+          sx={{
+            color: '#ffffff',
+            marginBottom: '15px',
+            textAlign: 'center',
+          }}
+        >
+          Share the link below! When your friend makes a purchase using our app, you earn cashback commission!
         </Typography>
         <TextField
           fullWidth
@@ -227,17 +281,45 @@ const ProfilePage = () => {
           value={inviteLink}
           InputProps={{
             readOnly: true,
+            sx: {
+              backgroundColor: '#ffffff',
+              borderRadius: '5px',
+              '& input': { color: '#ff5722', textAlign: 'center' },
+            },
           }}
         />
         <Button
           variant="contained"
-          color="primary"
-          sx={{ marginTop: '10px' }}
-          onClick={() => navigator.clipboard.writeText(inviteLink)}
+          sx={{
+            marginTop: '15px',
+            backgroundColor: '#ffffff',
+            color: '#ff5722',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            '&:hover': {
+              backgroundColor: '#ff5722',
+              color: '#ffffff',
+            },
+          }}
+          onClick={handleCopyLink}
         >
-          Copy Invite Link
+          📋 Copy Invite Link
         </Button>
+
+        {/* Snackbar for confirmation */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+            Invite link copied! Share it with your friends and start earning!
+          </Alert>
+        </Snackbar>
       </Box>
+
 
       {/* Family Tree Section */}
       <Box

@@ -254,6 +254,10 @@ const ProfilePage = () => {
             boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)',
           },
           overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -325,17 +329,7 @@ const ProfilePage = () => {
           📋 Copy Invite Link
         </Button>
 
-        {/* Snackbar for confirmation */}
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-            Invite link copied! Share it with your friends and start earning!
-          </Alert>
-        </Snackbar>
+
       </Box>
 
 
@@ -435,7 +429,19 @@ const ProfilePage = () => {
           sx={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}
         />
       </Box>
+      {/* Snackbar for confirmation */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Invite link copied! Share it with your friends and start earning!
+        </Alert>
+      </Snackbar>
     </Box>
+
   );
 };
 

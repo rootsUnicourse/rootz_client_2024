@@ -21,6 +21,7 @@ import logo from "../../Assets/Images/Rootz_logo.png";
 import LoginModal from "../LoginModal/LoginModal";
 import { fetchShopsBySearch } from "../../API/index";
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
+import Confetti from "react-confetti";
 
 const Navbar = () => {
   const { isLoggedIn, login, logout } = useAuth();
@@ -32,6 +33,7 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Fetch user data from localStorage when isLoggedIn changes
   useEffect(() => {
@@ -257,9 +259,7 @@ const Navbar = () => {
                     whiteSpace: "nowrap",
                     minWidth: "100px",
                     flexShrink: 0,
-                    animation: showLoginPrompt
-                      ? "glow 1.5s ease-in-out infinite"
-                      : "none",
+                    animation: showLoginPrompt ? "glow 1.5s ease-in-out infinite" : "none",
                     "@keyframes glow": {
                       "0%": {
                         boxShadow: "0 0 5px #39B75D",
@@ -276,6 +276,8 @@ const Navbar = () => {
                       opacity: 1,
                     },
                   }}
+                  onMouseEnter={() => setShowConfetti(true)}
+                  onMouseLeave={() => setShowConfetti(false)}
                   onClick={() => {
                     handleOpenLoginModal();
                     setShowLoginPrompt(false); // Hide prompt when modal opens
@@ -307,7 +309,7 @@ const Navbar = () => {
                       },
                     }}
                   >
-                    <Typography  sx={{ color:"black",fontWeight: "bold",fontSize:"12px" }}>
+                    <Typography sx={{ color: "black", fontWeight: "bold", fontSize: "12px" }}>
                       Log in to make money!💲
                     </Typography>
                   </Box>
@@ -324,6 +326,19 @@ const Navbar = () => {
         handleClose={handleCloseLoginModal}
         onLogin={handleLogin}
       />
+      {showConfetti && showLoginPrompt &&(
+        <Confetti
+          width={window.innerWidth}
+          height={100} // Confetti height limited to Navbar height
+          recycle={false}
+          numberOfPieces={200}
+          gravity={0.4}
+          drawShape={(ctx) => {
+            ctx.font = "20px Arial";
+            ctx.fillText("💲", 0, 0); // Draw money emoji at each confetti position
+          }}
+        />
+      )}
     </AppBar>
   );
 };

@@ -341,12 +341,10 @@ const ProfilePage = () => {
           padding: '20px',
           backgroundColor: '#fff3e0',
           borderRadius: '10px',
+          overflowX: 'auto', // Allow horizontal scrolling
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 'bold', marginBottom: '10px' }}
-        >
+        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '10px' }}>
           Your Family Tree
         </Typography>
         {/* Render the Family Tree Component */}

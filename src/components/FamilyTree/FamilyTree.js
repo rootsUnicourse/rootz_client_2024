@@ -31,16 +31,39 @@ const TreeNodeComponent = ({ user }) => {
             border: '1px solid #ccc',
             boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
             minWidth: '120px',
+            // Responsive styles
+            '@media (max-width:600px)': {
+              minWidth: '80px',
+              padding: '5px',
+            },
           }}
         >
           <Avatar
             src={user.profilePicture || 'https://via.placeholder.com/80'}
             alt={user.name}
-            sx={{ width: 60, height: 60, marginBottom: '10px' }}
+            sx={{
+              width: 60,
+              height: 60,
+              marginBottom: '10px',
+              // Responsive styles
+              '@media (max-width:600px)': {
+                width: 40,
+                height: 40,
+                marginBottom: '5px',
+              },
+            }}
           />
           <Typography
             variant="body1"
-            sx={{ fontWeight: 'bold', textAlign: 'center' }}
+            sx={{
+              fontWeight: 'bold',
+              textAlign: 'center',
+              fontSize: '1rem',
+              // Responsive styles
+              '@media (max-width:600px)': {
+                fontSize: '0.8rem',
+              },
+            }}
           >
             {user.name}
           </Typography>
@@ -48,7 +71,15 @@ const TreeNodeComponent = ({ user }) => {
           {user.amountEarnedFromChild && (
             <Typography
               variant="body2"
-              sx={{ color: '#4caf50', textAlign: 'center' }}
+              sx={{
+                color: '#4caf50',
+                textAlign: 'center',
+                fontSize: '0.8rem',
+                // Responsive styles
+                '@media (max-width:600px)': {
+                  fontSize: '0.7rem',
+                },
+              }}
             >
               Earned: ${formatAmount(user.amountEarnedFromChild)}
             </Typography>
@@ -66,7 +97,13 @@ const TreeNodeComponent = ({ user }) => {
 
 const FamilyTree = ({ userData }) => {
   return (
-    <Box sx={{ overflow: 'auto', padding: '20px' }}>
+    <Box
+      sx={{
+        overflowX: 'auto', // Allow horizontal scrolling
+        padding: '20px',
+        maxHeight: '80vh',
+      }}
+    >
       <Tree
         lineWidth={'2px'}
         lineColor={'#ccc'}
@@ -83,16 +120,39 @@ const FamilyTree = ({ userData }) => {
               border: '1px solid #ccc',
               boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
               minWidth: '120px',
+              // Responsive styles
+              '@media (max-width:600px)': {
+                minWidth: '80px',
+                padding: '5px',
+              },
             }}
           >
             <Avatar
               src={userData.profilePicture || 'https://via.placeholder.com/80'}
               alt={userData.name}
-              sx={{ width: 60, height: 60, marginBottom: '10px' }}
+              sx={{
+                width: 60,
+                height: 60,
+                marginBottom: '10px',
+                // Responsive styles
+                '@media (max-width:600px)': {
+                  width: 40,
+                  height: 40,
+                  marginBottom: '5px',
+                },
+              }}
             />
             <Typography
               variant="body1"
-              sx={{ fontWeight: 'bold', textAlign: 'center' }}
+              sx={{
+                fontWeight: 'bold',
+                textAlign: 'center',
+                fontSize: '1rem',
+                // Responsive styles
+                '@media (max-width:600px)': {
+                  fontSize: '0.8rem',
+                },
+              }}
             >
               {userData.name}
             </Typography>

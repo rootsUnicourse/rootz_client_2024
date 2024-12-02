@@ -54,7 +54,10 @@ function Home() {
         alignItems="center" // Centers items vertically (if needed)
       >
         {shops.map((shop) => (
-          <Grid2 key={shop._id} xs={6} sm={6} md={3} lg={3}>
+          <Grid2
+            key={shop._id}
+            size={{ xs: 6, md: 4, lg: 3, }}
+          >
             <ShopCard
               shop={shop}
               isLiked={likedShops.includes(shop._id)} // Check if the shop is liked
@@ -65,6 +68,7 @@ function Home() {
       </Grid2>
     </Container>
   );
+
 }
 
 export default Home;

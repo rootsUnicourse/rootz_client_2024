@@ -13,6 +13,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { likeShop, simulatePurchase } from '../../API/index';
 import { useAuth } from "../../AuthContext";
 import { useLoginModal } from '../../LoginModalContext'; // Import useLoginModal
+import { useTheme } from '@mui/material/styles';
+
 
 const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -23,7 +25,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
 
   const { isLoggedIn } = useAuth();
   const { handleOpenLoginModal } = useLoginModal(); // Use LoginModalContext
-
+  const theme = useTheme();
   // Sync isLiked state with initialIsLiked prop
   useEffect(() => {
     setIsLiked(initialIsLiked);
@@ -76,7 +78,11 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
   return (
     <Card
       sx={{
-        width: 275, // Card width
+        width: 275, // Default width for larger screens
+        [theme.breakpoints.down('sm')]: {
+          width: '100%',
+          height: 260 // Full width on mobile devices
+        }, // Card width
         height: cardHeight, // Fixed card height
         position: 'relative',
         overflow: 'hidden',
@@ -134,13 +140,15 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
       <Box
         sx={{
           position: 'absolute',
-          bottom: 50, // Ensures expanding content stays above the button
+          bottom: 40, // Ensures expanding content stays above the button
           width: '100%',
           height: `${bottomSectionHeight}px`,
           backgroundColor: '#fff',
           zIndex: 3,
           transition: 'height 0.3s ease-in-out',
-
+          [theme.breakpoints.down('sm')]: {
+            bottom: 30,
+          },
         }}
       >
         <Box sx={{ boxSizing: 'border-box' }}>
@@ -194,7 +202,15 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
             >
               <Typography
                 variant="body2"
-                sx={{ color: '#555', lineHeight: 1.4, padding: '0 10px' }}
+                sx={{
+                  color: '#555',
+                  lineHeight: 1.4,
+                  padding: '0 10px',
+                  [theme.breakpoints.down('sm')]: {
+                    lineHeight: 1.4,
+                    fontSize: '12px'
+                  },
+                }}
               >
                 {shop.description}
               </Typography>
@@ -207,11 +223,17 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
       <Box
         sx={{
           position: 'absolute',
-          bottom: 5, // Reduced distance from the bottom edge
-          left: '50%',
-          transform: 'translateX(-50%)', // Center horizontally
+          bottom: 5, // Distance from the bottom edge
+          left: '50%', // Position at 50% of the parent's width
+          transform: 'translateX(-50%)', // Adjust to center it horizontally
           zIndex: 4,
           width: 'fit-content',
+          [theme.breakpoints.down('sm')]: {
+            width: '100%', // Set full width
+            left: '0', // Reset left position for full width
+            transform: 'none', // No horizontal transformation needed
+            textAlign: 'center', // Center the content within the box
+          },
         }}
       >
         <Button
@@ -234,6 +256,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
           Shop on Site
         </Button>
       </Box>
+
     </Card>
   );
 };

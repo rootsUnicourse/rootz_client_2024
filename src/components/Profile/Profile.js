@@ -16,7 +16,8 @@ import {
   Button,
   Snackbar,
   Alert,
-  Pagination
+  Pagination,
+  TableContainer,
 } from '@mui/material';
 import Grid2 from "@mui/material/Grid2";
 import {
@@ -148,7 +149,7 @@ const ProfilePage = () => {
 
       {/* Balance Overview Section */}
       <Grid2 container spacing={1} sx={{ marginBottom: '20px' }}>
-        <Grid2 item xs={12} md={3}>
+        <Grid2 item size={{ xs: 12, md: 3 }}>
           <Card>
             <CardContent
               sx={{
@@ -170,7 +171,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
         </Grid2>
-        <Grid2 item xs={12} md={3}>
+        <Grid2 item size={{ xs: 12, md: 3 }}>
           <Card>
             <CardContent
               sx={{
@@ -192,7 +193,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
         </Grid2>
-        <Grid2 item xs={12} md={3}>
+        <Grid2 item size={{ xs: 12, md: 3 }}>
           <Card>
             <CardContent
               sx={{
@@ -214,7 +215,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
         </Grid2>
-        <Grid2 item xs={12} md={3}>
+        <Grid2 item size={{ xs: 12, md: 3 }}>
           <Card>
             <CardContent
               sx={{
@@ -360,68 +361,74 @@ const ProfilePage = () => {
         >
           Transaction History
         </Typography>
-        <Table
+        <TableContainer
           sx={{
-            minWidth: 650,
-            backgroundColor: '#fff',
-            borderRadius: '10px',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-            overflow: 'hidden',
+            maxWidth: '100%',
+            overflowX: 'auto',
           }}
         >
-          <TableHead>
-            <TableRow sx={{ backgroundColor: '#39B75D' }}>
-              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Date</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Description</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Amount</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {transactions.length > 0 ? (
-              transactions.map((transaction, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' },
-                    '&:hover': { backgroundColor: '#f0f0f0' },
-                  }}
-                >
-                  <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
-                  <TableCell>{transaction.description}</TableCell>
-                  <TableCell
+          <Table
+            sx={{
+              backgroundColor: '#fff',
+              borderRadius: '10px',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+              overflow: 'hidden',
+            }}
+          >
+            <TableHead>
+              <TableRow sx={{ backgroundColor: '#39B75D' }}>
+                <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Date</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Description</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Amount</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {transactions.length > 0 ? (
+                transactions.map((transaction, index) => (
+                  <TableRow
+                    key={index}
                     sx={{
-                      color:
-                        parseFloat(transaction.amount?.$numberDecimal) >= 0
-                          ? '#4caf50'
-                          : '#f44336',
-                      fontWeight: 'bold',
+                      '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' },
+                      '&:hover': { backgroundColor: '#f0f0f0' },
                     }}
                   >
-                    ${formatAmount(transaction.amount)}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color:
-                        transaction.status === 'Completed'
-                          ? '#4caf50'
-                          : '#ff9800',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {transaction.status}
+                    <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
+                    <TableCell>{transaction.description}</TableCell>
+                    <TableCell
+                      sx={{
+                        color:
+                          parseFloat(transaction.amount?.$numberDecimal) >= 0
+                            ? '#4caf50'
+                            : '#f44336',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      ${formatAmount(transaction.amount)}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color:
+                          transaction.status === 'Completed'
+                            ? '#4caf50'
+                            : '#ff9800',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {transaction.status}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    No Transactions yet
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={4} align="center">
-                  No Transactions yet
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <Pagination
           count={totalPages}
           page={currentPage}

@@ -228,6 +228,7 @@ const Navbar = () => {
             button="true"
             component={Link}
             to="/profile"
+            onClick={() => setMobileOpen(false)}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -249,20 +250,34 @@ const Navbar = () => {
             </Typography>
           </ListItem>
         )}
-        {isLoggedIn && (<ListItem button="true" component={Link} to="/favorite-shops" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
+        {isLoggedIn && (<ListItem button="true" onClick={() => setMobileOpen(false)} component={Link} to="/favorite-shops" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
           <ListItemText sx={{ fontWeight: "bold" }} primary="Favorite Shops" />
         </ListItem>)}
         {isLoggedIn && (
-          <ListItem button="true" onClick={handleLogout} variant="body1" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
+          <ListItem
+            button="true"
+            onClick={() => {
+              handleLogout();
+              setMobileOpen(false);
+            }}
+            variant="body1"
+            sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
             <ListItemText primary="Logout" />
           </ListItem>
         )}
         {!isLoggedIn && (
-          <ListItem variant="body1" button="true" onClick={handleOpenLoginModal} sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
+          <ListItem
+            variant="body1"
+            button="true"
+            onClick={() => {
+              handleOpenLoginModal();
+              setMobileOpen(false);
+            }}
+            sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
             <ListItemText primary="Log In" />
           </ListItem>
         )}
-        <ListItem button="true" component={Link} to="/" variant="body1" sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
+        <ListItem button="true" component={Link} onClick={() => setMobileOpen(false)} to="/" variant="body1" sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
           <ListItemText primary="All Shops" />
         </ListItem>
 
@@ -282,6 +297,7 @@ const Navbar = () => {
                 component={Link}
                 to={`/shop/${shop._id}`}
                 key={shop._id}
+                onClick={() => setMobileOpen(false)}
               >
                 <ListItemText primary={shop.name} />
               </ListItem>

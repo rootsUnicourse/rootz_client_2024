@@ -120,7 +120,7 @@ const Navbar = () => {
         display: "flex",
         flexDirection: "column",
         textAlign: "center",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "white",
         height: "100%",
       }}
     >
@@ -232,31 +232,40 @@ const Navbar = () => {
               display: "flex",
               alignItems: "center",
               gap: 2,
+              backgroundColor: "#4BCD6F",
+              color: 'white',
+              opacity: 0.9,
+              borderBottom: '1px solid white',
             }}
+
           >
             <Avatar
               src={user?.profilePicture}
               alt={user?.name}
               sx={{ width: 40, height: 40 }}
             />
-            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+            <Typography sx={{ fontWeight: "bold" }}>
               Profile
             </Typography>
           </ListItem>
         )}
-        <ListItem button component={Link} to="/">
-          <ListItemText primary="All Shops" />
-        </ListItem>
+        {isLoggedIn && (<ListItem button component={Link} to="/favorite-shops" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
+          <ListItemText sx={{ fontWeight: "bold" }} primary="Favorite Shops" />
+        </ListItem>)}
         {isLoggedIn && (
-          <ListItem button onClick={handleLogout}>
+          <ListItem button onClick={handleLogout} variant="body1" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
             <ListItemText primary="Logout" />
           </ListItem>
         )}
         {!isLoggedIn && (
-          <ListItem button onClick={handleOpenLoginModal}>
+          <ListItem variant="body1" button onClick={handleOpenLoginModal} sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
             <ListItemText primary="Log In" />
           </ListItem>
         )}
+        <ListItem button component={Link} to="/" variant="body1" sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
+          <ListItemText primary="All Shops" />
+        </ListItem>
+
       </List>
 
       {/* Favorite Shops */}

@@ -25,7 +25,7 @@ const FavoriteShops = () => {
             <Grid2 container spacing={3}>
                 {likedShops.length > 0 ? (
                     likedShops.map((shop) => (
-                        <Grid2 item xs={12} sm={6} md={4} lg={3} key={shop._id}>
+                        <Grid2 size={{xs: 6, sm: 6, md: 4, lg: 3}} key={shop._id}>
                             <ShopCard shop={shop} isLiked={true} toggleLike={() => {}} />
                         </Grid2>
                     ))

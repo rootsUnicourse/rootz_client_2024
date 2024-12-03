@@ -3,11 +3,14 @@ import React from "react";
 import Navbar from "../Navbar/Navbar";
 import SubNavbar from "../SubNavbar/SubNavbar";
 import Footer from "../Footer/Footer"; // Import the Footer component
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useAuth } from "../../AuthContext";
 
 const Layout = ({ children }) => {
     const { isLoggedIn } = useAuth();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     return (
         <Box
@@ -20,7 +23,7 @@ const Layout = ({ children }) => {
             }}
         >
             <Navbar />
-            {isLoggedIn && <SubNavbar />}
+            {!isMobile && isLoggedIn && <SubNavbar />}
             <main
                 style={{
                     flex: 1,

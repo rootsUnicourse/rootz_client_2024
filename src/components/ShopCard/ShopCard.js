@@ -153,10 +153,10 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
       >
         <Box sx={{ boxSizing: 'border-box' }}>
           {/* Logo */}
-          
+
           <Box
             sx={{
-              display: 'flex', 
+              display: 'flex',
               justifyContent: 'center',
               border: '3px solid #fff',
               objectFit: 'cover',
@@ -256,6 +256,11 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
             '&:hover': {
               backgroundColor: '#4CAF50',
               color: 'white',
+            },
+            [theme.breakpoints.down('sm')]: {
+              padding: '5px 10px',    // Smaller padding on mobile
+              fontSize: '0.875rem',   // Adjust font size
+              borderRadius: '30px',   // Slightly smaller border radius
             },
           }}
           onClick={handlePurchase}

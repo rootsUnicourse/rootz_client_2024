@@ -153,18 +153,22 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
       >
         <Box sx={{ boxSizing: 'border-box' }}>
           {/* Logo */}
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          
+          <Box
+            sx={{
+              display: 'flex', 
+              justifyContent: 'center',
+              border: '3px solid #fff',
+              objectFit: 'cover',
+            }}
+          >
             <img
               src={shop.image || 'https://via.placeholder.com/80'}
               alt={shop.title}
-              style={{
-                border: '3px solid #fff',
-                width: '190px',
-                height: '60px',
-                objectFit: 'cover',
-              }}
+              style={{ width: '90%', height: '90%' }}
             />
           </Box>
+
 
           {/* Shop Name */}
           <Typography
@@ -181,7 +185,10 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
               fontWeight: 700,
               textAlign: 'center',
               marginBottom: '8px',
-              fontSize: '18px' // Reduced spacing between cashback and button
+              fontSize: '18px', // Reduced spacing between cashback and button,
+              [theme.breakpoints.down('sm')]: {
+                fontSize: '12px'
+              },
             }}
           >
             {shop.discount ? `${shop.discount} Cashback` : 'No Discount'}

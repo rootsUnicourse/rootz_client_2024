@@ -225,7 +225,7 @@ const Navbar = () => {
       <List>
         {isLoggedIn && (
           <ListItem
-            button
+            button="true"
             component={Link}
             to="/profile"
             sx={{
@@ -249,20 +249,20 @@ const Navbar = () => {
             </Typography>
           </ListItem>
         )}
-        {isLoggedIn && (<ListItem button component={Link} to="/favorite-shops" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
+        {isLoggedIn && (<ListItem button="true" component={Link} to="/favorite-shops" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
           <ListItemText sx={{ fontWeight: "bold" }} primary="Favorite Shops" />
         </ListItem>)}
         {isLoggedIn && (
-          <ListItem button onClick={handleLogout} variant="body1" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
+          <ListItem button="true" onClick={handleLogout} variant="body1" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
             <ListItemText primary="Logout" />
           </ListItem>
         )}
         {!isLoggedIn && (
-          <ListItem variant="body1" button onClick={handleOpenLoginModal} sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
+          <ListItem variant="body1" button="true" onClick={handleOpenLoginModal} sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
             <ListItemText primary="Log In" />
           </ListItem>
         )}
-        <ListItem button component={Link} to="/" variant="body1" sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
+        <ListItem button="true" component={Link} to="/" variant="body1" sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
           <ListItemText primary="All Shops" />
         </ListItem>
 

@@ -1,6 +1,6 @@
 // src/components/Footer/Footer.jsx
 import React from "react";
-import { Box, Container, Typography,Grid,Link, IconButton } from "@mui/material";
+import { Box, Container, Typography,Link, IconButton } from "@mui/material";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';

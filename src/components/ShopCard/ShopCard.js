@@ -81,7 +81,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
         width: 275, // Default width for larger screens
         [theme.breakpoints.down('sm')]: {
           width: '100%',
-          height: 260 // Full width on mobile devices
+          height: 200 // Full width on mobile devices
         }, // Card width
         height: cardHeight, // Fixed card height
         position: 'relative',
@@ -147,7 +147,7 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
           zIndex: 3,
           transition: 'height 0.3s ease-in-out',
           [theme.breakpoints.down('sm')]: {
-            bottom: 30,
+            bottom: 5,
           },
         }}
       >

@@ -149,7 +149,7 @@ const ProfilePage = () => {
 
       {/* Balance Overview Section */}
       <Grid2 container spacing={1} sx={{ marginBottom: '20px' }}>
-        <Grid2 item size={{ xs: 12, md: 3 }}>
+        <Grid2 size={{ xs: 12, md: 3 }}>
           <Card>
             <CardContent
               sx={{
@@ -171,7 +171,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
         </Grid2>
-        <Grid2 item size={{ xs: 12, md: 3 }}>
+        <Grid2 size={{ xs: 12, md: 3 }}>
           <Card>
             <CardContent
               sx={{
@@ -193,7 +193,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
         </Grid2>
-        <Grid2 item size={{ xs: 12, md: 3 }}>
+        <Grid2 size={{ xs: 12, md: 3 }}>
           <Card>
             <CardContent
               sx={{
@@ -215,7 +215,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
         </Grid2>
-        <Grid2 item size={{ xs: 12, md: 3 }}>
+        <Grid2 size={{ xs: 12, md: 3 }}>
           <Card>
             <CardContent
               sx={{

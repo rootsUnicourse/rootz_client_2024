@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const API = axios.create({ baseURL: 'https://roots-server.fly.dev' });
-const API = axios.create({ baseURL: 'http://localhost:3000' });
+const API = axios.create({ baseURL: 'https://rootz-server-2024.fly.dev' });
+// const API = axios.create({ baseURL: 'http://localhost:3000' });
 
 // Assuming the token is stored in localStorage
 API.interceptors.request.use((req) => {

@@ -17,7 +17,8 @@ import {
   ListItem,
   ListItemText,
   useMediaQuery,
-  Divider
+  Divider,
+  Badge
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
@@ -48,6 +49,7 @@ const Navbar = () => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   // Fetch user data from localStorage when isLoggedIn changes
   useEffect(() => {
@@ -97,6 +99,7 @@ const Navbar = () => {
     login(userInfo); // Update context
     setUser(userInfo); // Set local state
     handleCloseLoginModal();
+    setShowNotification(true);
   };
 
   const handleLogout = () => {
@@ -566,20 +569,34 @@ const Navbar = () => {
           {isMobile && (
             <Box sx={{ display: "flex", alignItems: "center" }}>
               {isLoggedIn ? (
-                // If logged in, show the profile avatar linking to /profile
                 <IconButton
                   component={Link}
                   to="/profile"
                   sx={{ color: "#39B75D" }}
                 >
-                  <Avatar
-                    alt={user?.name}
-                    src={user?.profilePicture}
-                    sx={{ width: 35, height: 35 }}
-                  />
+                  <Badge
+                    color="error"
+                    variant="dot"
+                    invisible={!showNotification} // If showNotification is false, badge won't show
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        top: 4,    // Adjust these values as needed
+                        right: 4,  // to move the badge closer
+                      }
+                    }}
+                  >
+                    <Avatar
+                      alt={user?.name}
+                      src={user?.profilePicture}
+                      sx={{ width: 35, height: 35 }}
+                    />
+                  </Badge>
                 </IconButton>
               ) : (
-                // If not logged in, show a login icon that opens the login modal
                 <IconButton
                   sx={{ color: "#39B75D" }}
                   onClick={handleOpenLoginModal}
@@ -588,7 +605,6 @@ const Navbar = () => {
                 </IconButton>
               )}
 
-              {/* Drawer Toggle Button */}
               <IconButton
                 aria-label="open drawer"
                 edge="end"

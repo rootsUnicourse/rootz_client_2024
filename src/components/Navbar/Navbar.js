@@ -30,6 +30,7 @@ import LoginModal from "../LoginModal/LoginModal";
 import { fetchShopsBySearch } from "../../API/index";
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
 import Confetti from "react-confetti";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const Navbar = () => {
   const theme = useTheme();
@@ -563,13 +564,40 @@ const Navbar = () => {
 
           {/* Mobile Menu Icon */}
           {isMobile && (
-            <IconButton
-              aria-label="open drawer"
-              edge="end"
-              onClick={handleDrawerToggle}
-            >
-              <MenuIcon sx={{ fontSize: 30 }} />
-            </IconButton>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              {isLoggedIn ? (
+                // If logged in, show the profile avatar linking to /profile
+                <IconButton
+                  component={Link}
+                  to="/profile"
+                  sx={{ color: "#39B75D" }}
+                >
+                  <Avatar
+                    alt={user?.name}
+                    src={user?.profilePicture}
+                    sx={{ width: 35, height: 35 }}
+                  />
+                </IconButton>
+              ) : (
+                // If not logged in, show a login icon that opens the login modal
+                <IconButton
+                  sx={{ color: "#39B75D" }}
+                  onClick={handleOpenLoginModal}
+                >
+                  <AccountCircle sx={{ fontSize: 35 }} />
+                </IconButton>
+              )}
+
+              {/* Drawer Toggle Button */}
+              <IconButton
+                aria-label="open drawer"
+                edge="end"
+                onClick={handleDrawerToggle}
+                sx={{ marginLeft: 1 }}
+              >
+                <MenuIcon sx={{ fontSize: 30 }} />
+              </IconButton>
+            </Box>
           )}
         </Toolbar>
       </Container>

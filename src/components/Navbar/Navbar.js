@@ -233,25 +233,23 @@ const Navbar = () => {
               display: "flex",
               alignItems: "center",
               gap: 2,
-              backgroundColor: "#4BCD6F",
+              backgroundColor: "#A8CD89",
               color: 'white',
-              opacity: 0.9,
               borderBottom: '1px solid white',
             }}
-
           >
             <Avatar
               src={user?.profilePicture}
               alt={user?.name}
               sx={{ width: 40, height: 40 }}
             />
-            <Typography sx={{ fontWeight: "bold" }}>
+            <Typography>
               Profile
             </Typography>
           </ListItem>
         )}
-        {isLoggedIn && (<ListItem button="true" onClick={() => setMobileOpen(false)} component={Link} to="/favorite-shops" sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
-          <ListItemText sx={{ fontWeight: "bold" }} primary="Favorite Shops" />
+        {isLoggedIn && (<ListItem button="true" onClick={() => setMobileOpen(false)} component={Link} to="/favorite-shops" sx={{ backgroundColor: "#A8CD89", color: 'white', fontWeight: "bold", borderBottom: '1px solid white' }}>
+          <ListItemText primary="Favorite Shops" />
         </ListItem>)}
         {isLoggedIn && (
           <ListItem
@@ -261,7 +259,7 @@ const Navbar = () => {
               setMobileOpen(false);
             }}
             variant="body1"
-            sx={{ backgroundColor: "#4BCD6F", color: 'white', opacity: 0.9, fontWeight: "bold", borderBottom: '1px solid white' }}>
+            sx={{ backgroundColor: "#A8CD89", color: 'white', borderBottom: '1px solid white' }}>
             <ListItemText primary="Logout" />
           </ListItem>
         )}

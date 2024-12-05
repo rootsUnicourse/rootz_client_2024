@@ -36,7 +36,7 @@ const Footer = () => {
                         </Typography>
                         <Box component="ul" sx={{ listStyle: "none", padding: 0, margin: 0 }}>
                             <li>
-                                <Link href="/all-shops" sx={footerLinkStyle}>
+                                <Link href="/" sx={footerLinkStyle}>
                                     All Shops
                                 </Link>
                             </li>
@@ -65,7 +65,7 @@ const Footer = () => {
                         </Typography>
                         <Box component="ul" sx={{ listStyle: "none", padding: 0, margin: 0 }}>
                             <li>
-                                <Link href="/terms" sx={footerLinkStyle}>
+                                <Link href="/rootz_terms.pdf" target="_blank" sx={footerLinkStyle}>
                                     Terms of Service
                                 </Link>
                             </li>

@@ -48,7 +48,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.18.6",
     "ajv": "^7.2.4",
-    "@babel/plugin-proposal-private-property-in-object": "^7.18.6"
+    "sass": "^1.82.0"
   }
 }

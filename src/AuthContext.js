@@ -22,9 +22,15 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const scheduleAutoLogout = (exp) => {
+    const login = (userInfo, userToken) => {
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        localStorage.setItem("userToken", userToken);
+        setIsLoggedIn(true);
+        setToken(userToken);
+
+        const decoded = jwtDecode(userToken);
         const currentTime = Math.floor(Date.now() / 1000);
-        const timeUntilExpiry = (exp - currentTime) * 1000; // convert to ms
+        const timeUntilExpiry = (decoded.exp - currentTime) * 1000;
 
         if (logoutTimerRef.current) {
             clearTimeout(logoutTimerRef.current);
@@ -33,16 +39,6 @@ export const AuthProvider = ({ children }) => {
         logoutTimerRef.current = setTimeout(() => {
             logout();
         }, timeUntilExpiry);
-    };
-
-    const login = (userInfo, userToken) => {
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        localStorage.setItem("userToken", userToken);
-        setIsLoggedIn(true);
-        setToken(userToken);
-
-        const decoded = jwtDecode(userToken);
-        scheduleAutoLogout(decoded.exp);
     };
 
     useEffect(() => {
@@ -55,14 +51,23 @@ export const AuthProvider = ({ children }) => {
             if (decoded.exp > currentTime) {
                 setIsLoggedIn(true);
                 setToken(storedToken);
-                scheduleAutoLogout(decoded.exp);
+                
+                // Inline the scheduleAutoLogout logic here
+                const timeUntilExpiry = (decoded.exp - currentTime) * 1000;
+                if (logoutTimerRef.current) {
+                    clearTimeout(logoutTimerRef.current);
+                }
+                logoutTimerRef.current = setTimeout(() => {
+                    logout();
+                }, timeUntilExpiry);
+                
             } else {
                 logout();
             }
         } else {
             setIsLoggedIn(false);
         }
-    }, []); // No dependencies needed since we inlined the logic
+    }, []); // no dependencies needed
 
     return (
         <AuthContext.Provider value={{ isLoggedIn, login, logout, token }}>

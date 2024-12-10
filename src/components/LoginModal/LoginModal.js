@@ -147,7 +147,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         const { token, user } = response.data;
         localStorage.setItem("userToken", token);
         localStorage.setItem("userInfo", JSON.stringify(user));
-        onLogin(user);
+        onLogin(user,token);
         handleClose();
       } catch (error) {
         console.error(
@@ -178,7 +178,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       const { token, user } = response.data;
       localStorage.setItem("userToken", token);
       localStorage.setItem("userInfo", JSON.stringify(user));
-      onLogin(user);
+      onLogin(user,token);
       handleClose();
     } catch (error) {
       console.error(
@@ -231,7 +231,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       const result = await googleLogin(tokenId, formData.parentId); // Pass parentId
       localStorage.setItem("userToken", result.data.token);
       localStorage.setItem("userInfo", JSON.stringify(result.data.user));
-      onLogin(result.data.user); // Update context with user info
+      onLogin(result.data.user, result.data.token); // Update context with user info
       handleClose();
     } catch (error) {
       console.error("Error during Google sign-in:", error);

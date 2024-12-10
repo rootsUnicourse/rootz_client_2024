@@ -95,8 +95,8 @@ const Navbar = () => {
     }
   }, [location.search, isLoggedIn]);
 
-  const handleLogin = (userInfo) => {
-    login(userInfo); // Update context
+  const handleLogin = (userInfo,token) => {
+    login(userInfo,token); // Update context
     setUser(userInfo); // Set local state
     handleCloseLoginModal();
     setShowNotification(true);

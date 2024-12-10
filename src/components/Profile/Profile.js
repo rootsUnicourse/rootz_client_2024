@@ -133,7 +133,7 @@ const ProfilePage = () => {
         }}
       >
         <Avatar
-          src={userData.profilePicture || 'https://via.placeholder.com/80'}
+          src={userData.profilePicture || undefined}
           alt={userData.name}
           sx={{ width: 80, height: 80, marginRight: '20px' }}
         />

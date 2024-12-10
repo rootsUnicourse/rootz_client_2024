@@ -128,7 +128,7 @@ const FamilyTree = ({ userData }) => {
             }}
           >
             <Avatar
-              src={userData.profilePicture || 'https://via.placeholder.com/80'}
+              src={userData.profilePicture || undefined}
               alt={userData.name}
               sx={{
                 width: 60,

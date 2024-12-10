@@ -10,36 +10,6 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const logoutTimerRef = useRef(null);
 
-    const checkLoginStatus = () => {
-        const storedUser = localStorage.getItem("userInfo");
-        const storedToken = localStorage.getItem("userToken");
-        if (storedUser && storedToken) {
-            const decoded = jwtDecode(storedToken); // decode storedToken
-            const currentTime = Math.floor(Date.now() / 1000);
-
-            if (decoded.exp > currentTime) {
-                setIsLoggedIn(true);
-                setToken(storedToken);
-                scheduleAutoLogout(decoded.exp);
-            } else {
-                logout();
-            }
-        } else {
-            setIsLoggedIn(false);
-        }
-    };
-
-    const login = (userInfo, userToken) => {
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        localStorage.setItem("userToken", userToken);
-        setIsLoggedIn(true);
-        setToken(userToken);
-
-        // Use jwtDecode instead of jwt_decode
-        const decoded = jwtDecode(userToken);
-        scheduleAutoLogout(decoded.exp);
-    };
-
     const logout = () => {
         localStorage.removeItem("userInfo");
         localStorage.removeItem("userToken");
@@ -65,9 +35,34 @@ export const AuthProvider = ({ children }) => {
         }, timeUntilExpiry);
     };
 
+    const login = (userInfo, userToken) => {
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        localStorage.setItem("userToken", userToken);
+        setIsLoggedIn(true);
+        setToken(userToken);
+
+        const decoded = jwtDecode(userToken);
+        scheduleAutoLogout(decoded.exp);
+    };
+
     useEffect(() => {
-        checkLoginStatus();
-    }, []);
+        const storedUser = localStorage.getItem("userInfo");
+        const storedToken = localStorage.getItem("userToken");
+        if (storedUser && storedToken) {
+            const decoded = jwtDecode(storedToken);
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            if (decoded.exp > currentTime) {
+                setIsLoggedIn(true);
+                setToken(storedToken);
+                scheduleAutoLogout(decoded.exp);
+            } else {
+                logout();
+            }
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []); // No dependencies needed since we inlined the logic
 
     return (
         <AuthContext.Provider value={{ isLoggedIn, login, logout, token }}>

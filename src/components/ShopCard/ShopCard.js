@@ -103,11 +103,11 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
           position: 'absolute',
           top: 8,
           right: 8,
-          backgroundColor: '#f5f5f5',
+          
           opacity: 0.9,
           zIndex: 4,
           '&:hover': {
-            backgroundColor: '#f5f5f5', // Keeps the background consistent
+             backgroundColor: 'transparent'
           },
         }}
         onMouseEnter={() => setHover(true)}

@@ -16,6 +16,7 @@ const formatAmount = (amount) => {
 };
 
 // Recursive component to render each node
+// Recursive component to render each node
 const TreeNodeComponent = ({ user }) => {
   return (
     <TreeNode
@@ -31,7 +32,6 @@ const TreeNodeComponent = ({ user }) => {
             border: '1px solid #ccc',
             boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
             minWidth: '120px',
-            // Responsive styles
             '@media (max-width:600px)': {
               minWidth: '80px',
               padding: '5px',
@@ -45,7 +45,6 @@ const TreeNodeComponent = ({ user }) => {
               width: 60,
               height: 60,
               marginBottom: '10px',
-              // Responsive styles
               '@media (max-width:600px)': {
                 width: 40,
                 height: 40,
@@ -59,7 +58,6 @@ const TreeNodeComponent = ({ user }) => {
               fontWeight: 'bold',
               textAlign: 'center',
               fontSize: '1rem',
-              // Responsive styles
               '@media (max-width:600px)': {
                 fontSize: '0.8rem',
               },
@@ -67,6 +65,24 @@ const TreeNodeComponent = ({ user }) => {
           >
             {user.name}
           </Typography>
+
+          {/* Show total earnings if available */}
+          {user.totalEarnings && (
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#4caf50',
+                textAlign: 'center',
+                fontSize: '0.8rem',
+                '@media (max-width:600px)': {
+                  fontSize: '0.7rem',
+                },
+              }}
+            >
+              My Earnings: ${formatAmount(user.totalEarnings)}
+            </Typography>
+          )}
+
           {/* Display amount earned from this user if available */}
           {user.amountEarnedFromChild && (
             <Typography
@@ -75,13 +91,13 @@ const TreeNodeComponent = ({ user }) => {
                 color: '#4caf50',
                 textAlign: 'center',
                 fontSize: '0.8rem',
-                // Responsive styles
+                fontWeight: 'bold',
                 '@media (max-width:600px)': {
                   fontSize: '0.7rem',
                 },
               }}
             >
-              Earned: ${formatAmount(user.amountEarnedFromChild)}
+              Earned (Child): ${formatAmount(user.amountEarnedFromChild)}
             </Typography>
           )}
         </Box>
@@ -95,7 +111,9 @@ const TreeNodeComponent = ({ user }) => {
   );
 };
 
+
 const FamilyTree = ({ userData }) => {
+  
   return (
     <Box
       sx={{
@@ -155,6 +173,20 @@ const FamilyTree = ({ userData }) => {
               }}
             >
               {userData.name}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#4caf50',
+                textAlign: 'center',
+                fontSize: '0.8rem',
+                fontWeight: 'bold',
+                '@media (max-width:600px)': {
+                  fontSize: '0.7rem',
+                },
+              }}
+            >
+              My Earnings: ${formatAmount(userData.wallet.moneyEarned)}
             </Typography>
           </Box>
         }

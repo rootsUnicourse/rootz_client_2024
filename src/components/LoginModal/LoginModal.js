@@ -24,8 +24,20 @@ import {
   requestPasswordReset,
 } from "../../API/index";
 import { useLocation } from "react-router-dom"; // Import useLocation
-import { Buffer } from 'buffer';
+import { Buffer } from "buffer";
 
+//
+// 1. ADD PASSWORD VALIDATION FUNCTION
+//
+function validatePassword(password) {
+  return {
+    length: password.length >= 8,
+    hasNumber: /\d/.test(password),
+    hasUpper: /[A-Z]/.test(password),
+    hasLower: /[a-z]/.test(password),
+    hasSymbol: /[^A-Za-z0-9]/.test(password),
+  };
+}
 
 const LoginModal = ({ open, handleClose, onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -47,6 +59,9 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [termsAgreed, setTermsAgreed] = useState(false);
 
+  // 2. TRACK IF USER HAS TOUCHED THE PASSWORD (for showing password requirements)
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
   const location = useLocation(); // Get the current location
 
   useEffect(() => {
@@ -56,6 +71,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       setIsSignUp(false);
       setIsForgotPassword(false);
       setShowVerification(false);
+      setPasswordTouched(false);
       setFormData({
         name: "",
         email: "",
@@ -70,12 +86,11 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       const params = new URLSearchParams(location.search);
       const encodedParentId = params.get("parentId");
       if (encodedParentId) {
-        // Decode the parentId based on the encoding used
-        //const decodedParentId = decodeURIComponent(encodedParentId);
-        // For encodeURIComponent encoding
-        // OR, if using Base64:
-        const decodedParentId = Buffer.from(encodedParentId, 'base64').toString('utf-8');
-        console.log(decodedParentId)
+        // For Base64-encoded parentId
+        const decodedParentId = Buffer.from(encodedParentId, "base64").toString(
+          "utf-8"
+        );
+        console.log(decodedParentId);
 
         setFormData((prevData) => ({
           ...prevData,
@@ -97,6 +112,27 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
   const handleEmailLogin = async (event) => {
     event.preventDefault();
     setFieldErrors({});
+
+    // If the user is signing up, ensure they meet the password checks
+    if (isSignUp) {
+      // Check password match
+      if (formData.password !== formData.confirmPassword) {
+        setFieldErrors({ confirmPassword: "Passwords do not match!" });
+        return;
+      }
+      // Optional: You could also check if password meets all the requirements
+      const checks = validatePassword(formData.password);
+      const allChecksPassed = Object.values(checks).every(Boolean);
+      if (!allChecksPassed) {
+        setSnackbar({
+          open: true,
+          message: "Please meet all password requirements.",
+          severity: "error",
+        });
+        return;
+      }
+    }
+
     if (!termsAgreed) {
       setSnackbar({
         open: true,
@@ -105,12 +141,9 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       });
       return;
     }
+
     if (isSignUp) {
       // Sign-up logic
-      if (formData.password !== formData.confirmPassword) {
-        setFieldErrors({ confirmPassword: "Passwords do not match!" });
-        return;
-      }
       try {
         const response = await register({
           name: formData.name,
@@ -147,7 +180,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         const { token, user } = response.data;
         localStorage.setItem("userToken", token);
         localStorage.setItem("userInfo", JSON.stringify(user));
-        onLogin(user,token);
+        onLogin(user, token);
         handleClose();
       } catch (error) {
         console.error(
@@ -178,7 +211,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       const { token, user } = response.data;
       localStorage.setItem("userToken", token);
       localStorage.setItem("userInfo", JSON.stringify(user));
-      onLogin(user,token);
+      onLogin(user, token);
       handleClose();
     } catch (error) {
       console.error(
@@ -252,6 +285,9 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
     });
   };
 
+  // 3. CALCULATE PASSWORD CHECKS (only needed for sign-up flow)
+  const passwordChecks = validatePassword(formData.password);
+
   return (
     <>
       {/* Main Authentication Dialog */}
@@ -262,12 +298,15 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle id="login-dialog-title" sx={{ color: 'white', m: 0, p: 2, backgroundColor: '#EE7214', opacity: 0.8}}>
+        <DialogTitle
+          id="login-dialog-title"
+          sx={{ color: "white", m: 0, p: 2, backgroundColor: "#EE7214", opacity: 0.8 }}
+        >
           {isSignUp
             ? "Sign Up"
             : isForgotPassword
-              ? "Forgot Password"
-              : "Log In"}
+            ? "Forgot Password"
+            : "Log In"}
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -275,7 +314,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
               position: "absolute",
               right: 8,
               top: 8,
-              color: 'white',
+              color: "white",
             }}
           >
             <CloseIcon />
@@ -439,9 +478,59 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     autoComplete="new-password"
                     value={formData.password}
                     onChange={handleChange}
+                    onBlur={() => setPasswordTouched(true)} // 4. SHOW CHECKS ON BLUR
                     error={Boolean(fieldErrors.password)}
                     helperText={fieldErrors.password}
                   />
+
+                  {/* 5. SHOW PASSWORD REQUIREMENTS IF THE USER HAS TOUCHED THE PASSWORD FIELD */}
+                  {passwordTouched && (
+                    <Box sx={{ mb: 2 }}>
+                      <Alert severity="info">
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          Password Requirements
+                        </Typography>
+                        <ul style={{ margin: 0, paddingLeft: "1.5rem" }}>
+                          <li
+                            style={{
+                              color: passwordChecks.length ? "green" : "inherit",
+                            }}
+                          >
+                            At least 8 characters
+                          </li>
+                          <li
+                            style={{
+                              color: passwordChecks.hasNumber ? "green" : "inherit",
+                            }}
+                          >
+                            At least one number
+                          </li>
+                          <li
+                            style={{
+                              color: passwordChecks.hasUpper ? "green" : "inherit",
+                            }}
+                          >
+                            At least one uppercase letter
+                          </li>
+                          <li
+                            style={{
+                              color: passwordChecks.hasLower ? "green" : "inherit",
+                            }}
+                          >
+                            At least one lowercase letter
+                          </li>
+                          <li
+                            style={{
+                              color: passwordChecks.hasSymbol ? "green" : "inherit",
+                            }}
+                          >
+                            At least one symbol (e.g., !@#$%)
+                          </li>
+                        </ul>
+                      </Alert>
+                    </Box>
+                  )}
+
                   <TextField
                     margin="normal"
                     required
@@ -591,10 +680,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                       width: "100%",
                     }}
                   >
-                    <GoogleLogin
-                      onSuccess={responseMessage}
-                      onError={errorMessage}
-                    />
+                    <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
                     {!termsAgreed && (
                       <Box
                         sx={{
@@ -631,11 +717,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
           onClose={handleSnackbarClose}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-          >
+          <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: "100%" }}>
             {snackbar.message}
           </Alert>
         </Snackbar>

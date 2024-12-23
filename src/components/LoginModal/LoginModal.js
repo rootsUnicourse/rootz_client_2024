@@ -262,7 +262,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle id="login-dialog-title" sx={{ color: 'white', m: 0, p: 2, backgroundColor: '#1DC14C', opacity: 0.7 }}>
+        <DialogTitle id="login-dialog-title" sx={{ color: 'white', m: 0, p: 2, backgroundColor: '#EE7214', opacity: 0.8}}>
           {isSignUp
             ? "Sign Up"
             : isForgotPassword
@@ -315,8 +315,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     sx={{
                       mt: 3,
                       mb: 2,
-                      backgroundColor: "#39B75D",
-                      "&:hover": { backgroundColor: "#39B75D" },
+                      backgroundColor: "#EE7214",
+                      "&:hover": { backgroundColor: "#EE7214" },
                     }}
                   >
                     Verify Email
@@ -379,8 +379,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     sx={{
                       mt: 3,
                       mb: 2,
-                      backgroundColor: "#39B75D",
-                      "&:hover": { backgroundColor: "#39B75D" },
+                      backgroundColor: "#EE7214",
+                      "&:hover": { backgroundColor: "#EE7214" },
                     }}
                   >
                     Send Password Reset Email
@@ -486,8 +486,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     sx={{
                       mt: 3,
                       mb: 2,
-                      backgroundColor: "#39B75D",
-                      "&:hover": { backgroundColor: "#39B75D" },
+                      backgroundColor: "#EE7214",
+                      "&:hover": { backgroundColor: "#EE7214" },
                     }}
                   >
                     Sign Up
@@ -570,8 +570,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     sx={{
                       mt: 1,
                       mb: 2,
-                      backgroundColor: "#39B75D",
-                      "&:hover": { backgroundColor: "#39B75D" },
+                      backgroundColor: "#EE7214",
+                      "&:hover": { backgroundColor: "#EE7214" },
                     }}
                   >
                     Sign In

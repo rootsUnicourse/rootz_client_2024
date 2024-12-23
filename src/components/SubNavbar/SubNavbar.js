@@ -8,7 +8,7 @@ const SubNavbar = () => {
     return (
         <Box
             sx={{
-                backgroundColor: "#39B75D",
+                backgroundColor: "#EE7214",
                 width: "100vw", // Full-width background
                 boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
             }}
@@ -27,15 +27,15 @@ const SubNavbar = () => {
                     sx={{
                         textTransform: "none",
                         fontWeight: "bold",
-                        color: location.pathname === "/profile" ? "#39B75D" : "#fff",
+                        color: location.pathname === "/profile" ? "#EE7214" : "#fff",
                         fontSize: "18px",
-                        backgroundColor: location.pathname === "/profile" ? "#cce7d6" : "transparent",
+                        backgroundColor: location.pathname === "/profile" ? "#F7B787" : "transparent",
                         borderRadius: "0",
                         padding: "10px 20px",
                         borderLeft: "1px solid #fff",
                         "&:hover": {
-                            backgroundColor: "#cce7d6",
-                            color: "#39B75D",
+                            backgroundColor: "#F7B787",
+                            color: "#EE7214",
                         },
                     }}
                 >
@@ -47,16 +47,16 @@ const SubNavbar = () => {
                     sx={{
                         textTransform: "none",
                         fontWeight: "bold",
-                        color: location.pathname === "/favorite-shops" ? "#39B75D" : "#fff",
+                        color: location.pathname === "/favorite-shops" ? "#EE7214" : "#fff",
                         fontSize: "18px",
-                        backgroundColor: location.pathname === "/favorite-shops" ? "#cce7d6" : "transparent",
+                        backgroundColor: location.pathname === "/favorite-shops" ? "#F7B787" : "transparent",
                         borderRadius: "0",
                         padding: "10px 20px",
                         borderRight: "1px solid #fff",
                         borderLeft: "1px solid #fff",
                         "&:hover": {
-                            backgroundColor: "#cce7d6",
-                            color: "#39B75D",
+                            backgroundColor: "#F7B787",
+                            color: "#EE7214",
                         },
                     }}
                 >
@@ -68,15 +68,15 @@ const SubNavbar = () => {
                     sx={{
                         textTransform: "none",
                         fontWeight: "bold",
-                        color: location.pathname === "/" ? "#39B75D" : "#fff",
+                        color: location.pathname === "/" ? "#EE7214" : "#fff",
                         fontSize: "18px",
-                        backgroundColor: location.pathname === "/" ? "#cce7d6" : "transparent",
+                        backgroundColor: location.pathname === "/" ? "#F7B787" : "transparent",
                         borderRadius: "0",
                         borderRight: "1px solid #fff",
                         padding: "10px 20px",
                         "&:hover": {
-                            backgroundColor: "#cce7d6",
-                            color: "#39B75D",
+                            backgroundColor: "#F7B787",
+                            color: "#EE7214",
                         },
                     }}
                 >

@@ -39,7 +39,7 @@ const SearchResultItem = ({ shop }) => {
         {shop.title}
       </Typography>
       {/* Cashback */}
-      <Typography variant="body2" sx={{ color: "#46C76B", opacity: 0.9, fontWeight: "bold" }}>
+      <Typography variant="body2" sx={{ color: "#4CAF50", fontWeight: "bold" }}>
         {shop.discount ? `${shop.discount} Cashback` : "No Discount"}
       </Typography>
     </Box>

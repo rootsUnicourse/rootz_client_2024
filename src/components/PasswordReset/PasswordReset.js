@@ -97,8 +97,8 @@ const PasswordReset = () => {
         sx={{
           mt: 3,
           mb: 2,
-          backgroundColor: "#39B75D",
-          "&:hover": { backgroundColor: "#39B75D" },
+          backgroundColor: "#EE7214",
+          "&:hover": { backgroundColor: "#EE7214" },
         }}
       >
         Reset Password

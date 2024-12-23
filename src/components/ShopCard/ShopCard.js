@@ -249,12 +249,12 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
             padding: '10px 20px', // Consistent padding for roundness
             borderRadius: '50px', // Fully rounded button
             backgroundColor: 'white',
-            color: '#4CAF50',
+            color: '#EE7214',
             textTransform: 'none', // Prevent uppercase text
-            border: '1px solid #4CAF50',
+            border: '1px solid #EE7214',
             boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)', // Subtle shadow
             '&:hover': {
-              backgroundColor: '#4CAF50',
+              backgroundColor: '#EE7214',
               color: 'white',
             },
             [theme.breakpoints.down('sm')]: {

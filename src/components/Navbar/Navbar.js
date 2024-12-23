@@ -151,7 +151,7 @@ const Navbar = () => {
               <InputAdornment position="end">
                 <IconButton
                   sx={{
-                    backgroundColor: "#39B75D",
+                    backgroundColor: "#EE7214",
                     opacity: 0.8,
                     width: "35px", // Set width
                     height: "35px", // Set height
@@ -363,11 +363,11 @@ const Navbar = () => {
                       <InputAdornment position="end">
                         <IconButton
                           sx={{
-                            backgroundColor: "#39B75D",
+                            backgroundColor: "#EE7214",
                             opacity: 0.8,
                             marginRight: -1.7,
                             "&:hover": {
-                              backgroundColor: "#39B75D",
+                              backgroundColor: "#EE7214",
                               opacity: 1,
                             },
                           }}
@@ -488,7 +488,7 @@ const Navbar = () => {
                       variant="outlined"
                       sx={{
                         color: "white",
-                        backgroundColor: "#39B75D",
+                        backgroundColor: "#EE7214",
                         opacity: 0.8,
                         border: "none",
                         borderRadius: "50px",
@@ -500,17 +500,17 @@ const Navbar = () => {
                           : "none",
                         "@keyframes glow": {
                           "0%": {
-                            boxShadow: "0 0 5px #39B75D",
+                            boxShadow: "0 0 5px #EE7214",
                           },
                           "50%": {
-                            boxShadow: "0 0 20px #39B75D",
+                            boxShadow: "0 0 20px #EE7214",
                           },
                           "100%": {
-                            boxShadow: "0 0 5px #39B75D",
+                            boxShadow: "0 0 5px #EE7214",
                           },
                         },
                         "&:hover": {
-                          backgroundColor: "#39B75D",
+                          backgroundColor: "#EE7214",
                           opacity: 1,
                         },
                       }}
@@ -572,7 +572,7 @@ const Navbar = () => {
                 <IconButton
                   component={Link}
                   to="/profile"
-                  sx={{ color: "#39B75D" }}
+                  sx={{ color: "#EE7214" }}
                 >
                   <Badge
                     color="error"
@@ -598,7 +598,7 @@ const Navbar = () => {
                 </IconButton>
               ) : (
                 <IconButton
-                  sx={{ color: "#39B75D" }}
+                  sx={{ color: "#EE7214" }}
                   onClick={handleOpenLoginModal}
                 >
                   <AccountCircle sx={{ fontSize: 35 }} />

@@ -8,7 +8,8 @@ import PasswordReset from './components/PasswordReset/PasswordReset';
 import Profile from './components/Profile/Profile';
 import FavoriteShops from './components/FavoriteShops/FavoriteShops';
 import { AuthProvider } from './AuthContext';
-import { LoginModalProvider } from './LoginModalContext'; // Import LoginModalProvider
+import { LoginModalProvider } from './LoginModalContext';
+import Dashboard from './components/Dashboard/Dashboard';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/password-reset/:token" element={<PasswordReset />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/favorite-shops" element={<FavoriteShops />} />
+                <Route path="/dashboard" element={<Dashboard />}/>
               </Routes>
             </Layout>
           </Router>

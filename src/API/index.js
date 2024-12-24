@@ -42,3 +42,15 @@ export const fetchUserProfile = () => API.get('/users/profile');
 
 // **Add the simulatePurchase function here**
 export const simulatePurchase = (shopId) => API.post('/wallet/purchase', { shopId });
+
+// Dashboard-related API calls
+export const fetchDashboardData = () => API.get('/dashboard');
+
+export const trackSiteVisit = () => {
+    // Use sessionStorage to prevent duplicate calls within the same session
+    if (!sessionStorage.getItem("siteVisited")) {
+      sessionStorage.setItem("siteVisited", "true"); // Mark visit as tracked
+      return API.post("/dashboard/visit"); // Send the request without a sessionId
+    }
+  };
+  

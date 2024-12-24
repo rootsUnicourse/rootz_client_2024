@@ -5,11 +5,11 @@ const API = axios.create({ baseURL: process.env.REACT_APP_API_BASE_URL });
 
 // Assuming the token is stored in localStorage
 API.interceptors.request.use((req) => {
-    const token = localStorage.getItem('userToken'); // Replace with your storage mechanism
-    if (token) {
-        req.headers.Authorization = `Bearer ${token}`;
-    }
-    return req;
+  const token = localStorage.getItem('userToken'); // Replace with your storage mechanism
+  if (token) {
+    req.headers.Authorization = `Bearer ${token}`;
+  }
+  return req;
 });
 
 // Shop-related API calls
@@ -17,6 +17,9 @@ export const fetchShops = () => API.get('/shops');
 export const fetchShopsBySearch = (searchQuery) => API.get('/shops/search', { params: { searchQuery } });
 export const likeShop = (shopId) => API.post('/users/like-shop', { shopId });
 export const fetchLikedShops = () => API.get('/users/liked-shops');
+export const incrementShopClickCount = (shopId) => {
+  return API.patch(`/shops/${shopId}/click`);
+};
 
 // Authentication-related API calls
 export const register = (formData) => API.post('/auth/register', formData);
@@ -47,10 +50,10 @@ export const simulatePurchase = (shopId) => API.post('/wallet/purchase', { shopI
 export const fetchDashboardData = () => API.get('/dashboard');
 
 export const trackSiteVisit = () => {
-    // Use sessionStorage to prevent duplicate calls within the same session
-    if (!sessionStorage.getItem("siteVisited")) {
-      sessionStorage.setItem("siteVisited", "true"); // Mark visit as tracked
-      return API.post("/dashboard/visit"); // Send the request without a sessionId
-    }
-  };
-  
+  // Use sessionStorage to prevent duplicate calls within the same session
+  if (!sessionStorage.getItem("siteVisited")) {
+    sessionStorage.setItem("siteVisited", "true"); // Mark visit as tracked
+    return API.post("/dashboard/visit"); // Send the request without a sessionId
+  }
+};
+

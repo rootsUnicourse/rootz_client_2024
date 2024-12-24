@@ -58,7 +58,7 @@ const Dashboard = () => {
           <List>
             {dashboardData.topShops.map((shop) => (
               <ListItem key={shop._id} sx={{ display: 'flex', alignItems: 'center' }}>
-                <img src={shop.image} alt={shop.title} style={{ width: 50, height: 50, marginRight: 10 }} />
+                <img src={shop.image} alt={shop.title} style={{ width: 150, height: 50, marginRight: 20 }} />
                 <ListItemText 
                   primary={shop.title} 
                   secondary={`Clicks: ${shop.clickCount} | Discount: ${shop.discount}`} 

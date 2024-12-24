@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { likeShop, simulatePurchase } from '../../API/index';
+import { likeShop, simulatePurchase, incrementShopClickCount } from '../../API/index';
 import { useAuth } from "../../AuthContext";
 import { useLoginModal } from '../../LoginModalContext'; // Import useLoginModal
 import { useTheme } from '@mui/material/styles';
@@ -54,18 +54,25 @@ const ShopCard = ({ shop, isLiked: initialIsLiked = false, toggleLike }) => {
 
   const handlePurchase = async () => {
     if (!isLoggedIn) {
-      handleOpenLoginModal(); // Open login modal
+      handleOpenLoginModal(); // Open login modal if the user is not logged in
       return;
     }
-
+  
     try {
+      // Simulate purchase (e.g., for user or wallet tracking)
       await simulatePurchase(shop._id);
+  
+      // Increment the click count for the shop
+      await incrementShopClickCount(shop._id);
+  
+      // Open the shop's external site in a new tab
       window.open(shop.siteUrl, '_blank');
     } catch (error) {
-      console.error('Error simulating purchase:', error.message);
+      console.error('Error during shop purchase or click tracking:', error.message);
       alert('An error occurred while processing your purchase. Please try again later.');
     }
   };
+  
 
   const cardHeight = 300; // Total card height
   const bottomSectionBaseHeight = cardHeight * 0.55; // Base bottom section height

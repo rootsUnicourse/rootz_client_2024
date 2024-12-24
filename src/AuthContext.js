@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useRef } from "react";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode"; // Correct import path for jwtDecode
 
 const AuthContext = createContext();
 
@@ -8,6 +8,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [token, setToken] = useState(null);
+    const [user, setUser] = useState(null); // Store decoded user information
     const logoutTimerRef = useRef(null);
 
     const logout = () => {
@@ -15,6 +16,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("userToken");
         setIsLoggedIn(false);
         setToken(null);
+        setUser(null);
 
         if (logoutTimerRef.current) {
             clearTimeout(logoutTimerRef.current);
@@ -29,6 +31,8 @@ export const AuthProvider = ({ children }) => {
         setToken(userToken);
 
         const decoded = jwtDecode(userToken);
+        setUser(decoded); // Store decoded user information
+
         const currentTime = Math.floor(Date.now() / 1000);
         const timeUntilExpiry = (decoded.exp - currentTime) * 1000;
 
@@ -51,8 +55,8 @@ export const AuthProvider = ({ children }) => {
             if (decoded.exp > currentTime) {
                 setIsLoggedIn(true);
                 setToken(storedToken);
-                
-                // Inline the scheduleAutoLogout logic here
+                setUser(decoded); // Set decoded user details
+
                 const timeUntilExpiry = (decoded.exp - currentTime) * 1000;
                 if (logoutTimerRef.current) {
                     clearTimeout(logoutTimerRef.current);
@@ -60,17 +64,16 @@ export const AuthProvider = ({ children }) => {
                 logoutTimerRef.current = setTimeout(() => {
                     logout();
                 }, timeUntilExpiry);
-                
             } else {
                 logout();
             }
         } else {
             setIsLoggedIn(false);
         }
-    }, []); // no dependencies needed
+    }, []);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, login, logout, token }}>
+        <AuthContext.Provider value={{ isLoggedIn, login, logout, token, user }}>
             {children}
         </AuthContext.Provider>
     );

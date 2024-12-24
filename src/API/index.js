@@ -49,11 +49,22 @@ export const simulatePurchase = (shopId) => API.post('/wallet/purchase', { shopI
 // Dashboard-related API calls
 export const fetchDashboardData = () => API.get('/dashboard');
 
-export const trackSiteVisit = () => {
+export const trackSiteVisit = (userId = null) => {
+  console.log('userID: ',userId);
+  
   // Use sessionStorage to prevent duplicate calls within the same session
   if (!sessionStorage.getItem("siteVisited")) {
     sessionStorage.setItem("siteVisited", "true"); // Mark visit as tracked
-    return API.post("/dashboard/visit"); // Send the request without a sessionId
+
+    // Prepare the payload
+    const payload = userId ? { userId } : {}; // Include userId if available
+    console.log(payload);
+    
+    // Send the POST request to track the visit
+    return API.post("/dashboard/visit", payload);
   }
 };
+
+
+export const fetchVisitors = () => API.get("/dashboard/visitors");
 

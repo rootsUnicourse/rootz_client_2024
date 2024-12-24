@@ -10,11 +10,14 @@ function Home() {
   const [shops, setShops] = useState([]);
   const [likedShops, setLikedShops] = useState([]);
   const [loading, setLoading] = useState(true);
+  const storedUser = JSON.parse(localStorage.getItem("userInfo") || "{}");
+  
+  
 
   useEffect(() => {
-    // Track site visit once per session
-    trackSiteVisit();
-  }, []);
+    // Track site visit once per session with userId if available
+    trackSiteVisit(storedUser?._id);
+  }, [storedUser?._id]);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -237,7 +237,7 @@ const Navbar = () => {
               display: "flex",
               alignItems: "center",
               gap: 2,
-              backgroundColor: "#A8CD89",
+              backgroundColor: "#EE7214",
               color: 'white',
               borderBottom: '1px solid white',
             }}
@@ -252,7 +252,7 @@ const Navbar = () => {
             </Typography>
           </ListItem>
         )}
-        {isLoggedIn && (<ListItem button="true" onClick={() => setMobileOpen(false)} component={Link} to="/favorite-shops" sx={{ backgroundColor: "#A8CD89", color: 'white', fontWeight: "bold", borderBottom: '1px solid white' }}>
+        {isLoggedIn && (<ListItem button="true" onClick={() => setMobileOpen(false)} component={Link} to="/favorite-shops" sx={{ backgroundColor: "#EE7214", color: 'white', fontWeight: "bold", borderBottom: '1px solid white' }}>
           <ListItemText primary="Favorite Shops" />
         </ListItem>)}
         {isLoggedIn && (
@@ -263,7 +263,7 @@ const Navbar = () => {
               setMobileOpen(false);
             }}
             variant="body1"
-            sx={{ backgroundColor: "#A8CD89", color: 'white', borderBottom: '1px solid white' }}>
+            sx={{ backgroundColor: "#EE7214", color: 'white', borderBottom: '1px solid white' }}>
             <ListItemText primary="Logout" />
           </ListItem>
         )}
@@ -279,7 +279,7 @@ const Navbar = () => {
             <ListItemText primary="Log In" />
           </ListItem>
         )}
-        <ListItem button="true" component={Link} onClick={() => setMobileOpen(false)} to="/" variant="body1" sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "#AAAAAA" }}>
+        <ListItem button="true" component={Link} onClick={() => setMobileOpen(false)} to="/" variant="body1" sx={{ backgroundColor: "#F1F1F1", fontWeight: "bold", color: "black" }}>
           <ListItemText primary="All Shops" />
         </ListItem>
 

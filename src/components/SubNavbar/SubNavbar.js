@@ -1,6 +1,9 @@
 import React from "react";
 import { Box, Button, Container } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
+import PersonIcon from '@mui/icons-material/Person';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 
 const SubNavbar = () => {
     const location = useLocation();
@@ -37,8 +40,12 @@ const SubNavbar = () => {
                             backgroundColor: "#F7B787",
                             color: "#FF8B0F",
                         },
+                        display: 'flex',
+                        gap: '8px',
+                        alignItems: 'center'
                     }}
                 >
+                    <PersonIcon sx={{ fontSize: 20 }} />
                     Profile
                 </Button>
                 <Button
@@ -58,8 +65,12 @@ const SubNavbar = () => {
                             backgroundColor: "#F7B787",
                             color: "#FF8B0F",
                         },
+                        display: 'flex',
+                        gap: '8px',
+                        alignItems: 'center'
                     }}
                 >
+                    <FavoriteIcon sx={{ fontSize: 20 }} />
                     Favorite Shops
                 </Button>
                 <Button
@@ -78,8 +89,12 @@ const SubNavbar = () => {
                             backgroundColor: "#F7B787",
                             color: "#FF8B0F",
                         },
+                        display: 'flex',
+                        gap: '8px',
+                        alignItems: 'center'
                     }}
                 >
+                    <StorefrontIcon sx={{ fontSize: 20 }} />
                     All Shops
                 </Button>
             </Container>

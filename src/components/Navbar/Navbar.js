@@ -152,7 +152,7 @@ const Navbar = () => {
               <InputAdornment position="end">
                 <IconButton
                   sx={{
-                    backgroundColor: "#EE7214",
+                    backgroundColor: "#1E293B",
                     opacity: 0.8,
                     width: "35px", // Set width
                     height: "35px", // Set height
@@ -238,7 +238,7 @@ const Navbar = () => {
               display: "flex",
               alignItems: "center",
               gap: 2,
-              backgroundColor: "#EE7214",
+              backgroundColor: "#FF8B0F",
               color: 'white',
               borderBottom: '1px solid white',
             }}
@@ -253,7 +253,7 @@ const Navbar = () => {
             </Typography>
           </ListItem>
         )}
-        {isLoggedIn && (<ListItem button="true" onClick={() => setMobileOpen(false)} component={Link} to="/favorite-shops" sx={{ backgroundColor: "#EE7214", color: 'white', fontWeight: "bold", borderBottom: '1px solid white' }}>
+        {isLoggedIn && (<ListItem button="true" onClick={() => setMobileOpen(false)} component={Link} to="/favorite-shops" sx={{ backgroundColor: "#FF8B0F", color: 'white', fontWeight: "bold", borderBottom: '1px solid white' }}>
           <ListItemText primary="Favorite Shops" />
         </ListItem>)}
         {isLoggedIn && (
@@ -264,7 +264,7 @@ const Navbar = () => {
               setMobileOpen(false);
             }}
             variant="body1"
-            sx={{ backgroundColor: "#EE7214", color: 'white', borderBottom: '1px solid white' }}>
+            sx={{ backgroundColor: "#FF8B0F", color: 'white', borderBottom: '1px solid white' }}>
             <ListItemText primary="Logout" />
           </ListItem>
         )}
@@ -400,11 +400,11 @@ const Navbar = () => {
                       <InputAdornment position="end">
                         <IconButton
                           sx={{
-                            backgroundColor: "#EE7214",
+                            backgroundColor: "#FF8B0F",
                             opacity: 0.8,
                             marginRight: -1.7,
                             "&:hover": {
-                              backgroundColor: "#EE7214",
+                              backgroundColor: "#FF8B0F",
                               opacity: 1,
                             },
                           }}
@@ -525,7 +525,7 @@ const Navbar = () => {
                       variant="outlined"
                       sx={{
                         color: "white",
-                        backgroundColor: "#EE7214",
+                        backgroundColor: "#FF8B0F",
                         opacity: 0.8,
                         border: "none",
                         borderRadius: "50px",
@@ -537,17 +537,17 @@ const Navbar = () => {
                           : "none",
                         "@keyframes glow": {
                           "0%": {
-                            boxShadow: "0 0 5px #EE7214",
+                            boxShadow: "0 0 5px #FF8B0F",
                           },
                           "50%": {
-                            boxShadow: "0 0 20px #EE7214",
+                            boxShadow: "0 0 20px #FF8B0F",
                           },
                           "100%": {
-                            boxShadow: "0 0 5px #EE7214",
+                            boxShadow: "0 0 5px #FF8B0F",
                           },
                         },
                         "&:hover": {
-                          backgroundColor: "#EE7214",
+                          backgroundColor: "#FF8B0F",
                           opacity: 1,
                         },
                       }}
@@ -609,7 +609,7 @@ const Navbar = () => {
                 <IconButton
                   component={Link}
                   to="/profile"
-                  sx={{ color: "#EE7214" }}
+                  sx={{ color: "#FF8B0F" }}
                 >
                   <Badge
                     color="error"
@@ -635,7 +635,7 @@ const Navbar = () => {
                 </IconButton>
               ) : (
                 <IconButton
-                  sx={{ color: "#EE7214" }}
+                  sx={{ color: "#FF8B0F" }}
                   onClick={handleOpenLoginModal}
                 >
                   <AccountCircle sx={{ fontSize: 35 }} />

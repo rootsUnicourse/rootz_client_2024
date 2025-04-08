@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Container, CircularProgress, Box } from "@mui/material";
+import { Container, Box, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import ShopCard from "../ShopCard/ShopCard";
 import { fetchShops, fetchLikedShops, trackSiteVisit } from "../../API/index";
 import { useAuth } from "../../AuthContext";
 import promoVideo from "../../Assets/video/main.mp4";
+import logo from "../../Assets/Images/Rootz_update_logo.png";
 
 function Home() {
   const { isLoggedIn } = useAuth();
@@ -75,7 +76,44 @@ function Home() {
       </Box>
       {loading ? (
         <Grid2 container justifyContent="center" alignItems="center" style={{ minHeight: "80vh" }}>
-          <CircularProgress sx={{ color: "#EE7214" }} />
+          <Box textAlign="center">
+            <Box
+              sx={{
+                animation: "spin 2s infinite linear",
+                "@keyframes spin": {
+                  "0%": { transform: "scale(1)" },
+                  "50%": { transform: "scale(1.1)" },
+                  "100%": { transform: "scale(1)" }
+                },
+              }}
+            >
+              <img 
+                src={logo} 
+                alt="Rootz Logo" 
+                style={{ 
+                  width: "120px",
+                  height: "auto"
+                }} 
+              />
+            </Box>
+            <Typography 
+              variant="h5" 
+              sx={{ 
+                color: "#FF8B0F", 
+                fontWeight: 600,
+                letterSpacing: "0.5px",
+                fontFamily: "'Segoe UI', Roboto, Arial, sans-serif",
+                animation: "fadeInOut 1.5s infinite ease-in-out",
+                "@keyframes fadeInOut": {
+                  "0%": { opacity: 0.7 },
+                  "50%": { opacity: 1 },
+                  "100%": { opacity: 0.7 }
+                }
+              }}
+            >
+              Loading Companies...
+            </Typography>
+          </Box>
         </Grid2>
       ) : (
         <Grid2 container spacing={2} justifyContent="center" alignItems="center">

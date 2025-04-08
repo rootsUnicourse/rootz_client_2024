@@ -374,7 +374,7 @@ const ProfilePage = () => {
             }}
           >
             <TableHead>
-              <TableRow sx={{ backgroundColor: '#EE7214' }}>
+              <TableRow sx={{ backgroundColor: '#FF8B0F' }}>
                 <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Date</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Description</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Amount</TableCell>

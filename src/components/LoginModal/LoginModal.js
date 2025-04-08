@@ -13,8 +13,11 @@ import {
   Checkbox,
   FormControlLabel,
   Link,
+  InputAdornment,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { GoogleLogin } from "@react-oauth/google";
 import {
   register,
@@ -58,6 +61,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [termsAgreed, setTermsAgreed] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // 2. TRACK IF USER HAS TOUCHED THE PASSWORD (for showing password requirements)
   const [passwordTouched, setPasswordTouched] = useState(false);
@@ -288,6 +293,14 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
   // 3. CALCULATE PASSWORD CHECKS (only needed for sign-up flow)
   const passwordChecks = validatePassword(formData.password);
 
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleToggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
     <>
       {/* Main Authentication Dialog */}
@@ -300,7 +313,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
       >
         <DialogTitle
           id="login-dialog-title"
-          sx={{ color: "white", m: 0, p: 2, backgroundColor: "#EE7214", opacity: 0.8 }}
+          sx={{ color: "white", m: 0, p: 2, backgroundColor: "#FF8B0F", opacity: 0.8 }}
         >
           {isSignUp
             ? "Sign Up"
@@ -354,8 +367,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     sx={{
                       mt: 3,
                       mb: 2,
-                      backgroundColor: "#EE7214",
-                      "&:hover": { backgroundColor: "#EE7214" },
+                      backgroundColor: "#FF8B0F",
+                      "&:hover": { backgroundColor: "#FF8B0F" },
                     }}
                   >
                     Verify Email
@@ -418,8 +431,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     sx={{
                       mt: 3,
                       mb: 2,
-                      backgroundColor: "#EE7214",
-                      "&:hover": { backgroundColor: "#EE7214" },
+                      backgroundColor: "#FF8B0F",
+                      "&:hover": { backgroundColor: "#FF8B0F" },
                     }}
                   >
                     Send Password Reset Email
@@ -473,7 +486,7 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     fullWidth
                     name="password"
                     label="Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     autoComplete="new-password"
                     value={formData.password}
@@ -481,6 +494,19 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     onBlur={() => setPasswordTouched(true)} // 4. SHOW CHECKS ON BLUR
                     error={Boolean(fieldErrors.password)}
                     helperText={fieldErrors.password}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleTogglePasswordVisibility}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
 
                   {/* 5. SHOW PASSWORD REQUIREMENTS IF THE USER HAS TOUCHED THE PASSWORD FIELD */}
@@ -537,13 +563,26 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     fullWidth
                     name="confirmPassword"
                     label="Confirm Password"
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     id="confirmPassword"
                     autoComplete="new-password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     error={Boolean(fieldErrors.confirmPassword)}
                     helperText={fieldErrors.confirmPassword}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle confirm password visibility"
+                            onClick={handleToggleConfirmPasswordVisibility}
+                            edge="end"
+                          >
+                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                   <FormControlLabel
                     control={
@@ -575,8 +614,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     sx={{
                       mt: 3,
                       mb: 2,
-                      backgroundColor: "#EE7214",
-                      "&:hover": { backgroundColor: "#EE7214" },
+                      backgroundColor: "#FF8B0F",
+                      "&:hover": { backgroundColor: "#FF8B0F" },
                     }}
                   >
                     Sign Up
@@ -616,13 +655,26 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     fullWidth
                     name="password"
                     label="Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     autoComplete="current-password"
                     value={formData.password}
                     onChange={handleChange}
                     error={Boolean(fieldErrors.password)}
                     helperText={fieldErrors.password}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleTogglePasswordVisibility}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                   <Typography align="right">
                     <Button onClick={() => setIsForgotPassword(true)}>
@@ -659,8 +711,8 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                     sx={{
                       mt: 1,
                       mb: 2,
-                      backgroundColor: "#EE7214",
-                      "&:hover": { backgroundColor: "#EE7214" },
+                      backgroundColor: "#FF8B0F",
+                      "&:hover": { backgroundColor: "#FF8B0F" },
                     }}
                   >
                     Sign In

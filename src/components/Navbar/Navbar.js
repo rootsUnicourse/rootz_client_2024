@@ -26,7 +26,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useAuth } from "../../AuthContext";
 import { useLoginModal } from "../../LoginModalContext";
-import logo from "../../Assets/Images/Rootz_logo.png";
+import logo from "../../Assets/Images/Rootz_update_logo.png";
+import rootzText from "../../Assets/Images/Rootz.png";
 import LoginModal from "../LoginModal/LoginModal";
 import { fetchShopsBySearch } from "../../API/index";
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
@@ -133,7 +134,7 @@ const Navbar = () => {
         <img
           src={logo}
           alt="Logo"
-          style={{ width: "150px", margin: "20px auto" }}
+          style={{ width: "100px", height: "auto", objectFit: "contain" }}
         />
       </Link>
 
@@ -325,17 +326,53 @@ const Navbar = () => {
         >
           {/* Logo */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <IconButton edge="start" color="inherit" sx={{ padding: 0 }}>
+            <Link 
+              to="/" 
+              style={{ 
+                textDecoration: "none", 
+                display: "flex", 
+                alignItems: "center",
+                WebkitTapHighlightColor: "transparent"
+              }}
+            >
+              <IconButton 
+                edge="start" 
+                color="inherit" 
+                disableRipple
+                sx={{ 
+                  padding: 0, 
+                  "&:hover": { backgroundColor: "transparent" },
+                  "&:active": { backgroundColor: "transparent" },
+                  "&:focus": { backgroundColor: "transparent" },
+                  "&.Mui-focusVisible": { backgroundColor: "transparent" },
+                  WebkitTapHighlightColor: "transparent"
+                }}
+                TouchRippleProps={{ disabled: true }}
+              >
                 <img
                   src={logo}
                   alt="Logo"
                   style={{
-                    width: isMobile ? "150px" : "310px",
-                    height: isMobile ? "50px" : "100px",
+                    width: isMobile ? "60px" : "100px",
+                    height: "auto",
+                    objectFit: "contain",
+                    WebkitTapHighlightColor: "transparent",
+                    userSelect: "none"
                   }}
                 />
               </IconButton>
+              <img
+                src={rootzText}
+                alt="Rootz"
+                style={{
+                  height: isMobile ? "20px" : "35px",
+                  width: "auto",
+                  marginLeft: "-12px",
+                  objectFit: "contain",
+                  WebkitTapHighlightColor: "transparent",
+                  userSelect: "none"
+                }}
+              />
             </Link>
           </Box>
 

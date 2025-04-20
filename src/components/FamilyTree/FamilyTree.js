@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Tree, TreeNode } from 'react-organizational-chart';
-import { Avatar, Typography, Box, useMediaQuery, useTheme, Button, IconButton, Slider, Stack } from '@mui/material';
+import { Avatar, Typography, Box, useMediaQuery, useTheme, IconButton, Slider, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';

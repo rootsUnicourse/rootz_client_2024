@@ -14,6 +14,9 @@ const SubNavbar = () => {
                 backgroundColor: "#FF8B0F",
                 width: "100vw", // Full-width background
                 boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+                position: "sticky",
+                top: "100px", // Adjust based on your Navbar height
+                zIndex: 1000,
             }}
         >
             {/* Inner container aligns content with the Navbar */}

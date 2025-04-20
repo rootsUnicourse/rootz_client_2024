@@ -313,8 +313,13 @@ const Navbar = () => {
 
   return (
     <AppBar
-      position="static"
-      sx={{ backgroundColor: "#fff", boxShadow: "none" }}
+      position="sticky"
+      sx={{ 
+        backgroundColor: "#fff", 
+        boxShadow: "none",
+        top: 0,
+        zIndex: 1100
+      }}
     >
       <Container maxWidth="lg">
         <Toolbar

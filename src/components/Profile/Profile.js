@@ -337,17 +337,18 @@ const ProfilePage = () => {
       {/* Family Tree Section */}
       <Box
         sx={{
-          marginBottom: '20px',
-          padding: '20px',
+          marginBottom: '30px',
+          padding: '5px',
           backgroundColor: '#fff3e0',
           borderRadius: '10px',
-          overflowX: 'auto', // Allow horizontal scrolling
+          width: '100%',
+          minHeight: '400px', // Give it enough height
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          boxShadow: '0px 2px 10px rgba(0,0,0,0.1)',
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '10px' }}>
-          Your Family Tree
-        </Typography>
-        {/* Render the Family Tree Component */}
         <FamilyTree userData={userData} />
       </Box>
 

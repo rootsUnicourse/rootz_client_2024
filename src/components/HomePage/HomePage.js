@@ -10,12 +10,10 @@ import logo from "../../Assets/Images/Rootz_update_logo.png";
 function Home() {
   const { isLoggedIn } = useAuth();
   const [shops, setShops] = useState([]);
-  const [likedShops, setLikedShops] = useState([]);
+  const [likedShopIds, setLikedShopIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const storedUser = JSON.parse(localStorage.getItem("userInfo") || "{}");
   
-  
-
   useEffect(() => {
     // Track site visit once per session with userId if available
     trackSiteVisit(storedUser?._id);
@@ -26,13 +24,26 @@ function Home() {
       setLoading(true);
       try {
         const { data: shopsData } = await fetchShops();
-        setShops(shopsData);
 
         if (isLoggedIn) {
           const { data: likedShopsData } = await fetchLikedShops();
-          setLikedShops(likedShopsData.map((shop) => shop._id));
+          const likedIds = likedShopsData.map((shop) => shop._id);
+          setLikedShopIds(likedIds);
+          
+          // Sort shops to place favorites first
+          const sortedShops = [...shopsData].sort((a, b) => {
+            const aIsLiked = likedIds.includes(a._id);
+            const bIsLiked = likedIds.includes(b._id);
+            
+            if (aIsLiked && !bIsLiked) return -1; // a comes first
+            if (!aIsLiked && bIsLiked) return 1;  // b comes first
+            return 0; // no change in order
+          });
+          
+          setShops(sortedShops);
         } else {
-          setLikedShops([]);
+          setLikedShopIds([]);
+          setShops(shopsData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -116,13 +127,16 @@ function Home() {
           </Box>
         </Grid2>
       ) : (
-        <Grid2 container spacing={2} justifyContent="center" alignItems="center">
-          {shops.map((shop) => (
-            <Grid2 key={shop._id} size={{ xs: 6, sm: 6, md: 4, lg: 3 }}>
-              <ShopCard shop={shop} isLiked={likedShops.includes(shop._id)} />
-            </Grid2>
-          ))}
-        </Grid2>
+        <>
+          {/* All Shops Section with Favorites First */}
+          <Grid2 container spacing={2} justifyContent="flex-start" alignItems="stretch">
+            {shops.map((shop) => (
+              <Grid2 key={shop._id} size={{ xs: 6, sm: 6, md: 4, lg: 3 }}>
+                <ShopCard shop={shop} isLiked={likedShopIds.includes(shop._id)} />
+              </Grid2>
+            ))}
+          </Grid2>
+        </>
       )}
     </Container>
   );

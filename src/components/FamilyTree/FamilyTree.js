@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Tree, TreeNode } from 'react-organizational-chart';
-import { Avatar, Typography, Box, useMediaQuery, useTheme, IconButton } from '@mui/material';
+import { Avatar, Typography, Box, useMediaQuery, useTheme } from '@mui/material';
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 
 // Helper function to format Decimal128 amounts
@@ -191,31 +191,29 @@ const FamilyTree = ({ userData }) => {
   
   // Handle node click - zoom to that node
   const handleNodeClick = (node) => {
-    if (!focusedNode) {
-      setFocusedNode(node);
+    setFocusedNode(node);
+    
+    // Apply zoom
+    const zoomLevel = 1.5;
+    setScale(zoomLevel);
+    
+    // Find the node element in our collected references
+    const nodeElement = nodeElements[node._id];
+    
+    if (nodeElement && containerRef.current) {
+      // Get positions
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const nodeRect = nodeElement.parentElement.getBoundingClientRect();
       
-      // Apply zoom
-      const zoomLevel = 1.5;
-      setScale(zoomLevel);
+      // Calculate center offsets
+      const offsetX = (containerRect.width / 2) - (nodeRect.left - containerRect.left + nodeRect.width / 2);
+      const offsetY = (containerRect.height / 2) - (nodeRect.top - containerRect.top + nodeRect.height / 2);
       
-      // Find the node element in our collected references
-      const nodeElement = nodeElements[node._id];
-      
-      if (nodeElement && containerRef.current) {
-        // Get positions
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const nodeRect = nodeElement.parentElement.getBoundingClientRect();
-        
-        // Calculate center offsets
-        const offsetX = (containerRect.width / 2) - (nodeRect.left - containerRect.left + nodeRect.width / 2);
-        const offsetY = (containerRect.height / 2) - (nodeRect.top - containerRect.top + nodeRect.height / 2);
-        
-        // Apply position
-        setNodePosition({ 
-          x: offsetX / zoomLevel,
-          y: offsetY / zoomLevel 
-        });
-      }
+      // Apply position
+      setNodePosition({ 
+        x: offsetX / zoomLevel,
+        y: offsetY / zoomLevel 
+      });
     }
   };
   
@@ -254,7 +252,7 @@ const FamilyTree = ({ userData }) => {
         Your Family Tree
       </Typography>
       
-      {/* Show zoom out button when a node is focused */}
+      {/* Show zoom out button when a node is focused - ENHANCED */}
       {focusedNode && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
           <Box sx={{ 
@@ -262,37 +260,44 @@ const FamilyTree = ({ userData }) => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: 1,
-            backgroundColor: 'rgba(255, 139, 15, 0.1)',
-            padding: '5px 12px',
-            borderRadius: '6px',
+            backgroundColor: '#FF8B0F',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '30px',
             cursor: 'pointer',
-            '&:hover': { backgroundColor: 'rgba(255, 139, 15, 0.2)' },
+            boxShadow: '0 2px 8px rgba(255, 139, 15, 0.4)',
+            transition: 'all 0.2s ease',
+            '&:hover': { 
+              backgroundColor: '#e67900',
+              transform: 'scale(1.05)',
+              boxShadow: '0 4px 12px rgba(255, 139, 15, 0.6)'
+            },
           }}
           onClick={handleResetZoom}
           >
-            <ZoomOutMapIcon sx={{ color: '#FF8B0F', fontSize: '1.2rem' }} />
-            <Typography sx={{ color: '#FF8B0F', fontWeight: 'bold' }}>
+            <ZoomOutMapIcon sx={{ color: 'white', fontSize: '1.3rem' }} />
+            <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '1rem' }}>
               Show Full Tree
             </Typography>
           </Box>
         </Box>
       )}
       
-      {/* Instructions when no node is focused */}
-      {!focusedNode && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              color: '#666',
-              fontStyle: 'italic',
-              textAlign: 'center' 
-            }}
-          >
-            Click on any person to zoom in
-          </Typography>
-        </Box>
-      )}
+      {/* Updated instructions */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: '#666',
+            fontStyle: 'italic',
+            textAlign: 'center' 
+          }}
+        >
+          {focusedNode 
+            ? "Click on any other person to navigate to them" 
+            : "Click on any person to zoom in"}
+        </Typography>
+      </Box>
 
       <Box
         ref={containerRef}

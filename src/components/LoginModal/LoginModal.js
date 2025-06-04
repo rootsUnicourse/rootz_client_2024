@@ -38,7 +38,22 @@ function validatePassword(password) {
     hasNumber: /\d/.test(password),
     hasUpper: /[A-Z]/.test(password),
     hasLower: /[a-z]/.test(password),
-    hasSymbol: /[^A-Za-z0-9]/.test(password),
+    hasSymbol: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    hasNoSpaces: !/\s/.test(password)
+  };
+}
+
+// Email validation function
+function validateEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    return {
+      isValid: false,
+      error: "Please enter a valid email address"
+    };
+  }
+  return {
+    isValid: true
   };
 }
 
@@ -117,6 +132,13 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
   const handleEmailLogin = async (event) => {
     event.preventDefault();
     setFieldErrors({});
+
+    // Validate email format
+    const emailValidation = validateEmail(formData.email);
+    if (!emailValidation.isValid) {
+      setFieldErrors({ email: emailValidation.error });
+      return;
+    }
 
     // If the user is signing up, ensure they meet the password checks
     if (isSignUp) {
@@ -517,40 +539,23 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
                           Password Requirements
                         </Typography>
                         <ul style={{ margin: 0, paddingLeft: "1.5rem" }}>
-                          <li
-                            style={{
-                              color: passwordChecks.length ? "green" : "inherit",
-                            }}
-                          >
+                          <li style={{ color: passwordChecks.length ? "green" : "inherit" }}>
                             At least 8 characters
                           </li>
-                          <li
-                            style={{
-                              color: passwordChecks.hasNumber ? "green" : "inherit",
-                            }}
-                          >
+                          <li style={{ color: passwordChecks.hasNumber ? "green" : "inherit" }}>
                             At least one number
                           </li>
-                          <li
-                            style={{
-                              color: passwordChecks.hasUpper ? "green" : "inherit",
-                            }}
-                          >
+                          <li style={{ color: passwordChecks.hasUpper ? "green" : "inherit" }}>
                             At least one uppercase letter
                           </li>
-                          <li
-                            style={{
-                              color: passwordChecks.hasLower ? "green" : "inherit",
-                            }}
-                          >
+                          <li style={{ color: passwordChecks.hasLower ? "green" : "inherit" }}>
                             At least one lowercase letter
                           </li>
-                          <li
-                            style={{
-                              color: passwordChecks.hasSymbol ? "green" : "inherit",
-                            }}
-                          >
-                            At least one symbol (e.g., !@#$%)
+                          <li style={{ color: passwordChecks.hasSymbol ? "green" : "inherit" }}>
+                            At least one special character (!@#$%^&*(),.?":{'{'}|{'>'})
+                          </li>
+                          <li style={{ color: passwordChecks.hasNoSpaces ? "green" : "inherit" }}>
+                            No spaces allowed
                           </li>
                         </ul>
                       </Alert>

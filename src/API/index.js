@@ -50,7 +50,6 @@ export const simulatePurchase = (shopId) => API.post('/wallet/purchase', { shopI
 export const fetchDashboardData = () => API.get('/dashboard');
 
 export const trackSiteVisit = (userId = null) => {
-  console.log('userID: ',userId);
   
   // Use sessionStorage to prevent duplicate calls within the same session
   if (!sessionStorage.getItem("siteVisited")) {
@@ -58,7 +57,6 @@ export const trackSiteVisit = (userId = null) => {
 
     // Prepare the payload
     const payload = userId ? { userId } : {}; // Include userId if available
-    console.log(payload);
     
     // Send the POST request to track the visit
     return API.post("/dashboard/visit", payload);

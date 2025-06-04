@@ -110,7 +110,6 @@ const LoginModal = ({ open, handleClose, onLogin }) => {
         const decodedParentId = Buffer.from(encodedParentId, "base64").toString(
           "utf-8"
         );
-        console.log(decodedParentId);
 
         setFormData((prevData) => ({
           ...prevData,

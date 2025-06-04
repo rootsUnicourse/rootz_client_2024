@@ -86,7 +86,10 @@ function Home() {
         </video>
       </Box>
       {loading ? (
-        <Grid2 container justifyContent="center" alignItems="center" style={{ minHeight: "80vh" }}>
+        <Grid2 container justifyContent="center" alignItems="center" style={{ 
+          minHeight: "100vh",
+          marginTop: "-300px" // Offset the navbar height
+        }}>
           <Box textAlign="center">
             <Box
               sx={{
@@ -102,8 +105,8 @@ function Home() {
                 src={logo} 
                 alt="Rootz Logo" 
                 style={{ 
-                  width: "120px",
-                  height: "auto"
+                  width: "150px", // Increased size
+                  height: "auto",
                 }} 
               />
             </Box>
@@ -115,6 +118,7 @@ function Home() {
                 letterSpacing: "0.5px",
                 fontFamily: "'Segoe UI', Roboto, Arial, sans-serif",
                 animation: "fadeInOut 1.5s infinite ease-in-out",
+                marginTop: "-20px", // Added spacing
                 "@keyframes fadeInOut": {
                   "0%": { opacity: 0.7 },
                   "50%": { opacity: 1 },

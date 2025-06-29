@@ -492,27 +492,55 @@ const Navbar = () => {
                           top: "60px",
                           right: 0,
                           backgroundColor: "white",
-                          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
+                          boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.15)",
+                          borderRadius: "12px",
                           zIndex: 10,
-                          padding: "10px",
-                          minWidth: "100px",
+                          padding: "8px",
+                          minWidth: "140px",
+                          border: "1px solid #f0f0f0",
                         }}
                       >
                         <Typography
-                          onClick={handleLogout}
+                          component={Link}
+                          to="/profile"
+                          onClick={() => setDropdownOpen(false)}
                           sx={{
-                            color: "black",
+                            display: "block",
+                            color: "#333",
                             cursor: "pointer",
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            padding: "8px",
+                            fontSize: "15px",
+                            fontWeight: "600",
+                            padding: "12px 16px",
+                            borderRadius: "8px",
+                            textDecoration: "none",
+                            transition: "all 0.2s ease",
                             "&:hover": {
-                              backgroundColor: "#f1f1f1",
+                              backgroundColor: "#FF8B0F",
+                              color: "white",
+                              transform: "translateX(2px)",
                             },
                           }}
                         >
-                          Logout
+                          👤 Profile
+                        </Typography>
+                        <Typography
+                          onClick={handleLogout}
+                          sx={{
+                            color: "#333",
+                            cursor: "pointer",
+                            fontSize: "15px",
+                            fontWeight: "600",
+                            padding: "12px 16px",
+                            borderRadius: "8px",
+                            transition: "all 0.2s ease",
+                            "&:hover": {
+                              backgroundColor: "#ff4444",
+                              color: "white",
+                              transform: "translateX(2px)",
+                            },
+                          }}
+                        >
+                          🚪 Logout
                         </Typography>
                       </Box>
                     )}

@@ -41,17 +41,17 @@ const Footer = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/how-it-works" sx={footerLinkStyle}>
+                                <Link href="/howItWorks.html" sx={footerLinkStyle}>
                                     How It Works
                                 </Link>
                             </li>
-                            <li>
+                            {/* <li>
                                 <Link href="/contact" sx={footerLinkStyle}>
                                     Contact Us
                                 </Link>
-                            </li>
+                            </li> */}
                             <li>
-                                <Link href="/faq" sx={footerLinkStyle}>
+                                <Link href="/Rootz Cashback Referral System - FAQ.pdf" target="_blank" sx={footerLinkStyle}>
                                     FAQ
                                 </Link>
                             </li>
@@ -70,12 +70,12 @@ const Footer = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/privacy" sx={footerLinkStyle}>
+                                <Link href="/Privacy Policy for Rootz Cashback Referral System.pdf" target="_blank" sx={footerLinkStyle}>
                                     Privacy Policy
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/cookies" sx={footerLinkStyle}>
+                                <Link href="/Rootz Cookie Policy.pdf" target="_blank" sx={footerLinkStyle}>
                                     Cookie Policy
                                 </Link>
                             </li>

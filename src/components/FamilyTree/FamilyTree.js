@@ -1,6 +1,6 @@
 // src/components/FamilyTree/FamilyTree.js
 
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Tree, TreeNode } from 'react-organizational-chart';
 import { 
   Avatar, 
@@ -17,7 +17,6 @@ import {
   Card,
   CardContent
 } from '@mui/material';
-import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
@@ -35,21 +34,8 @@ const formatAmount = (amount) => {
   }
 };
 
-// New NodeIdentifier component to help with node identification
-const NodeIdentifier = ({ id, onNodeFound }) => {
-  const ref = useRef(null);
-  
-  useEffect(() => {
-    if (ref.current) {
-      onNodeFound(id, ref.current);
-    }
-  }, [id, onNodeFound]);
-  
-  return <span ref={ref} style={{ display: 'none' }} data-node-id={id} />;
-};
-
 // Recursive component to render each node
-const TreeNodeComponent = ({ user, onNodeClick, onNodeFound, userData, getEarningsFromUser }) => {
+const TreeNodeComponent = ({ user, onNodeClick, userData, getEarningsFromUser }) => {
   return (
     <TreeNode
       label={
@@ -77,9 +63,6 @@ const TreeNodeComponent = ({ user, onNodeClick, onNodeFound, userData, getEarnin
           }}
           onClick={() => onNodeClick(user)}
         >
-          {/* Add identifier component */}
-          <NodeIdentifier id={user._id} onNodeFound={onNodeFound} />
-          
           <Avatar
             src={user.profilePicture || 'https://via.placeholder.com/80'}
             alt={user.name}
@@ -143,7 +126,6 @@ const TreeNodeComponent = ({ user, onNodeClick, onNodeFound, userData, getEarnin
             key={child._id} 
             user={child} 
             onNodeClick={onNodeClick} 
-            onNodeFound={onNodeFound}
             userData={userData}
             getEarningsFromUser={getEarningsFromUser}
           />
@@ -160,9 +142,6 @@ const FamilyTree = ({ userData }) => {
   const treeRef = useRef(null);
   const [scale, setScale] = useState(1);
   const [height, setHeight] = useState('auto');
-  const [focusedNode, setFocusedNode] = useState(null);
-  const [nodePosition, setNodePosition] = useState({ x: 0, y: 0 });
-  const [nodeElements, setNodeElements] = useState({}); // Map of node IDs to DOM elements
   const [selectedUser, setSelectedUser] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -258,11 +237,6 @@ const FamilyTree = ({ userData }) => {
       }
     }
   };
-  
-  // Collect node references
-  const handleNodeFound = useCallback((id, element) => {
-    setNodeElements(prev => ({ ...prev, [id]: element }));
-  }, []);
   
   // Calculate initial scale to fit tree
   useEffect(() => {
@@ -397,9 +371,6 @@ const FamilyTree = ({ userData }) => {
                 }}
                 onClick={() => handleNodeClick(userData)}
               >
-                {/* Add identifier component */}
-                <NodeIdentifier id={userData._id} onNodeFound={handleNodeFound} />
-                
                 <Avatar
                   src={userData.profilePicture || undefined}
                   alt={userData.name}
@@ -450,7 +421,6 @@ const FamilyTree = ({ userData }) => {
                   key={child._id} 
                   user={child} 
                   onNodeClick={handleNodeClick} 
-                  onNodeFound={handleNodeFound}
                   userData={userData}
                   getEarningsFromUser={getEarningsFromUser}
                 />
